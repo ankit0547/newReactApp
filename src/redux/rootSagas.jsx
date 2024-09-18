@@ -1,7 +1,9 @@
-import { all } from "axios";
+import { all } from "redux-saga/effects";
 import authSaga from "../modules/auth/saga/authSaga";
 
-export default function* rootSaga() {
+function* rootSaga() {
   yield all([authSaga()]);
   // code after all-effect
 }
+
+export default rootSaga;

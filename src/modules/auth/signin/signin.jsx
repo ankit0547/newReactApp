@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAction } from "../../../redux/util/util";
 import { useNavigate } from "react-router-dom";
-import invokeApi from "../../../api/invokeApi";
-// import TextField from "../common/textfield";
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { isUserAuthenticated } = useSelector((state) => state.AuthState);
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -19,25 +21,19 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    const data = invokeApi("USER_LOGIN", formData);
-
-    data.then((rs) => {
-      console.log("Login submitted:", rs);
-      const { accessToken, refreshToken } = rs.data;
-      if (accessToken && refreshToken) {
-        localStorage.setItem("accessToken", accessToken);
-        localStorage.setItem("refreshToken", refreshToken);
-      }
-    });
-
-    const accessToken = localStorage.getItem("accessToken");
-    if (accessToken != "") {
-      navigate("/");
-    }
+    dispatch(getAction("USER_LOGIN", formData));
   };
 
-  console.log(formData);
+  useEffect(() => {
+    if (isUserAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isUserAuthenticated, navigate]);
+  useEffect(() => {
+    if (isUserAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, []);
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
@@ -94,6 +90,14 @@ const LoginForm = () => {
             Log In
           </button>
         </form>
+        <div className='mt-4 text-center'>
+          <a
+            href='/forgot-password'
+            className='text-sm text-indigo-600 hover:underline'
+          >
+            Forgot Password ?
+          </a>
+        </div>
       </div>
     </div>
   );

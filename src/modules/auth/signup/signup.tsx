@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import invokeApi from "../../../api/invokeApi";
+import { invokeApi } from "../../../api/invokeApi";
 
 const SignupForm = () => {
   const [formData, setFormData] = useState({

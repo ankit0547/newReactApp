@@ -1,21 +1,22 @@
-import { useNavigate } from "react-router-dom";
-import invokeApi from "../../api/invokeApi";
+// import { useNavigate } from "react-router-dom";
+import { invokeApi } from "../../api/invokeApi";
+// import invokeApi from "../../api/invokeApi";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleLogout = () => {
     // eslint-disable-next-line no-debugger
     debugger;
-    const res = invokeApi("USER_LOG_OUT");
+    invokeApi("USER_LOG_OUT");
     // invokeApi("USER_LOG_OUT");
-    res.then((data) => {
-      if (data.status === 200) {
-        localStorage.clear();
-        navigate("/");
-      }
-      console.log(data);
-    });
+    // res.then((data) => {
+    //   if (data.status === 200) {
+    //     localStorage.clear();
+    //     navigate("/");
+    //   }
+    //   console.log(data);
+    // });
   };
 
   return (

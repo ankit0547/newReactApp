@@ -1,32 +1,49 @@
-import { axiosInstance } from "./axios";
+import axiosInstance from "./axios.jsx";
 import { apiConstants } from "./constants";
 
-export const invokeApi = async (action, data = null, config = {}) => {
-  const result = await apiCall(action, data, config);
-  return result;
-};
-
-export const apiCall = (action, data = null, config = {}) => {
-  const filteredAction = apiConstants.filter(
-    (obj) => obj.actionType === action
-  )[0];
+export const invokeApi = async (
+  action,
+  data = null,
+  params = {},
+  config = {}
+) => {
   let response;
+  let filteredAction = apiConstants.find((obj) => obj.actionType === action);
+  if (!filteredAction) {
+    throw new Error(`Action type "${action}" not found in apiConstants`);
+  }
+
+  if (Object.keys(params).length > 0) {
+    // Replace placeholders in the endpoint (e.g., :resetToken)
+    let endpoint = filteredAction.endpoint;
+    // Dynamically replace placeholders like :resetToken with actual values
+    Object.keys(params).forEach((key) => {
+      endpoint = endpoint.replace(`:${key}`, params[key]);
+    });
+    filteredAction.endpoint = endpoint;
+  }
+
   try {
     switch (filteredAction.method) {
       case "POST":
-        response = axiosInstance.post(filteredAction.endpoint, data, config);
+        response = await axiosInstance.post(
+          filteredAction.endpoint,
+          data,
+          config
+        );
 
         break;
       case "GET":
-        response = axiosInstance.get(filteredAction.endpoint, data, config);
+        response = await axiosInstance.get(
+          filteredAction.endpoint,
+          data,
+          config
+        );
         break;
 
       default:
         break;
     }
-    // response.then((rs) => {
-    //   console.log("Login submitted:", rs);
-    // });
     return response; // Returning the response data
   } catch (error) {
     // You can customize error handling here if needed
@@ -34,5 +51,3 @@ export const apiCall = (action, data = null, config = {}) => {
     throw error; // Re-throw the error for further handling in the calling component
   }
 };
-
-export default invokeApi;

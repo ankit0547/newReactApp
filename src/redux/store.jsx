@@ -1,20 +1,14 @@
 import "regenerator-runtime/runtime";
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import { rootReducer } from "./rootReducer";
 import rootSaga from "./rootSagas";
+import { rootReducer } from "./rootReducer";
 
-// create the saga middleware
+// // create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
-
-// mount it on the Store
-export const store = configureStore({
+// // mount it on the Store
+export const AppStore = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(sagaMiddleware),
+  middleware: () => [sagaMiddleware],
 });
-
-// then run the saga
 sagaMiddleware.run(rootSaga);
-
-// render the application
