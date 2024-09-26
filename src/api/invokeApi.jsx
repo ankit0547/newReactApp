@@ -4,7 +4,7 @@ import { apiConstants } from "./constants";
 export const invokeApi = async (
   action,
   data = null,
-  params = {},
+  // params = {},
   config = {}
 ) => {
   let response;
@@ -13,15 +13,15 @@ export const invokeApi = async (
     throw new Error(`Action type "${action}" not found in apiConstants`);
   }
 
-  if (Object.keys(params).length > 0) {
-    // Replace placeholders in the endpoint (e.g., :resetToken)
-    let endpoint = filteredAction.endpoint;
-    // Dynamically replace placeholders like :resetToken with actual values
-    Object.keys(params).forEach((key) => {
-      endpoint = endpoint.replace(`:${key}`, params[key]);
-    });
-    filteredAction.endpoint = endpoint;
-  }
+  // if (Object.keys(params).length > 0) {
+  //   // Replace placeholders in the endpoint (e.g., :resetToken)
+  //   let endpoint = filteredAction.endpoint;
+  //   // Dynamically replace placeholders like :resetToken with actual values
+  //   Object.keys(params).forEach((key) => {
+  //     endpoint = endpoint.replace(`:${key}`, params[key]);
+  //   });
+  //   filteredAction.endpoint = endpoint;
+  // }
 
   try {
     switch (filteredAction.method) {
