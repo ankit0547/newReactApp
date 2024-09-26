@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview --host"
+    "preview": "vite preview --host --mode production"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
