@@ -11,7 +11,7 @@ const Home = () => {
   };
   return (
     <div>
-      <div>Devops</div>
+      <div className='font-bold'>Devops</div>
       <button onClick={handleClick}>click</button>
     </div>
   );
