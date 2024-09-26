@@ -1,26 +1,25 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAction } from "../../redux/util/util";
-// import { useEffect } from "react";
+import { useEffect } from "react";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  // const localAccessToken = localStorage.getItem("accessToken");
-  // const localRefreshToken = localStorage.getItem("refreshToken");
-  // // eslint-disable-next-line no-debugger
-  // debugger;
-  // if (localAccessToken && localRefreshToken) {
-  //   dispatch(getAction("SET_USER_AUTH", true));
-  // }
-
-  //   useEffect(() =)
+  const { userDetails } = useSelector((state) => state.AuthState);
 
   const handleLogout = () => {
     dispatch(getAction("USER_LOGOUT"));
   };
 
+  console.log("userDetails", userDetails);
+  useEffect(() => {
+    dispatch(getAction("GET_USER_DETAILS"));
+  }, []);
+
   return (
     <div>
-      Dashboard
+      <div>First Name: {userDetails?.profile.firstName}</div>
+      <div>Last Name: {userDetails?.profile.lastName}</div>
+      <div>Username: {userDetails?.profile.username}</div>
       <div>
         <button onClick={handleLogout}>Logout</button>
       </div>

@@ -36,8 +36,10 @@ axiosInstance.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
+        const apiEndpoint = import.meta.env.VITE_APP_API_URL;
+        const endPoint = `${apiEndpoint}/users/refresh-token`;
         const refreshToken = localStorage.getItem("refreshToken");
-        const response = await axios.post("/api/refresh-token", {
+        const response = await axios.post(endPoint, {
           refreshToken,
         });
         const { accessToken: newAccessToken } = response.data;
@@ -51,7 +53,7 @@ axiosInstance.interceptors.response.use(
         // Optionally, handle logout or redirect to login
       }
     }
-    return Promise.reject(error);
+    return Promise.reject(error.response.data);
   }
 );
 

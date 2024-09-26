@@ -15,23 +15,27 @@ function* loginUser(action) {
     // Handle form submission logic here
     const data = yield invokeApi("USER_LOGIN", action.payload);
 
-    const { accessToken, refreshToken } = data.data;
-    console.log("formData", accessToken, refreshToken);
+    if (data) {
+      const { accessToken, refreshToken } = data.data;
+      console.log("formData", accessToken, refreshToken);
 
-    if (accessToken && refreshToken) {
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
-    }
-    const localAccessToken = localStorage.getItem("accessToken");
-    const localRefreshToken = localStorage.getItem("refreshToken");
+      if (accessToken && refreshToken) {
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+      }
+      const localAccessToken = localStorage.getItem("accessToken");
+      const localRefreshToken = localStorage.getItem("refreshToken");
 
-    if (localAccessToken && localRefreshToken) {
-      yield put(getAction("SET_USER_AUTH", true));
-      yield put(ProcessingEnd());
+      if (localAccessToken && localRefreshToken) {
+        yield put(getAction("SET_USER_AUTH", true));
+        yield put(ProcessingEnd());
+      }
     }
   } catch (e) {
     console.log(">>>>", e);
-    yield put({ type: "USER_FETCH_FAILED", message: e.message });
+    // yield put({ type: "SET_AUTH_SRVER_ERROR", message: e.message });
+    yield put(getAction("SET_AUTH_SRVER_ERROR", e.message));
+    yield put(ProcessingEnd());
   }
 }
 function* logoutUser(action) {
@@ -46,6 +50,38 @@ function* logoutUser(action) {
     }
   } catch (e) {
     yield put({ type: "USER_FETCH_FAILED", message: e.message });
+    yield put(ProcessingEnd());
+  }
+}
+
+function* registerUser(action) {
+  yield put(ProcessingStart());
+  try {
+    // Handle form submission logic here
+    const data = yield invokeApi("USER_SIGNUP", action.payload);
+    if (data && data.status === 200) {
+      yield put(getAction("SET_USER_DETAILS", data.data));
+      yield put(ProcessingEnd());
+    }
+  } catch (e) {
+    yield put({ type: "USER_FETCH_FAILED", message: e.message });
+    yield put(ProcessingEnd());
+  }
+}
+function* getUserDetails(action) {
+  yield put(ProcessingStart());
+  try {
+    // eslint-disable-next-line no-debugger
+    debugger;
+    // Handle form submission logic here
+    const data = yield invokeApi("USER_DETAILS", action.payload);
+    if (data && data.status === 200) {
+      yield put(getAction("SET_USER_DETAILS", data.data));
+      yield put(ProcessingEnd());
+    }
+  } catch (e) {
+    yield put({ type: "USER_FETCH_FAILED", message: e.message });
+    yield put(ProcessingEnd());
   }
 }
 
@@ -65,6 +101,7 @@ function* forgotPassword(action) {
     }
   } catch (e) {
     yield put({ type: "USER_FETCH_FAILED", message: e.message });
+    yield put(ProcessingEnd());
   }
 }
 
@@ -90,14 +127,17 @@ function* resetPassword(action) {
     }
   } catch (e) {
     yield put({ type: "USER_FETCH_FAILED", message: e.message });
+    yield put(ProcessingEnd());
   }
 }
 
 function* authSaga() {
   yield takeEvery("USER_LOGIN", loginUser);
   yield takeEvery("USER_LOGOUT", logoutUser);
+  yield takeEvery("USER_REGISTER_REQUEST", registerUser);
   yield takeEvery("USER_PASSWORD_FORGOT", forgotPassword);
   yield takeEvery("RESET_PASSWORD", resetPassword);
+  yield takeEvery("GET_USER_DETAILS", getUserDetails);
 }
 
 export default authSaga;

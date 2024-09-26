@@ -1,27 +1,28 @@
 // import { useNavigate } from "react-router-dom";
-import { invokeApi } from "../../api/invokeApi";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAction } from "../../redux/util/util";
 // import invokeApi from "../../api/invokeApi";
 
 const Dashboard = () => {
   // const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { userDetails } = useSelector((state) => state.AuthState);
 
   const handleLogout = () => {
+    dispatch(getAction("USER_LOG_OUT"));
+  };
+
+  console.log("userDetails", userDetails);
+  useEffect(() => {
     // eslint-disable-next-line no-debugger
     debugger;
-    invokeApi("USER_LOG_OUT");
-    // invokeApi("USER_LOG_OUT");
-    // res.then((data) => {
-    //   if (data.status === 200) {
-    //     localStorage.clear();
-    //     navigate("/");
-    //   }
-    //   console.log(data);
-    // });
-  };
+    dispatch(getAction("GET_USER_DETAILS"));
+  });
 
   return (
     <div>
-      Dashboard
+      Dashboard??????????????
       <button
         onClick={handleLogout}
         type='button'

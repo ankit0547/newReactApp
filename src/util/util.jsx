@@ -11,3 +11,7 @@ export const deleteLocalStorageItem = (val) => {
 export const clearLocalStorage = () => {
   return localStorage.clear();
 };
+
+// export const processError = (arr) => {
+
+// }

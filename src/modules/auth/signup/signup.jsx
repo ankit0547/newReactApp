@@ -1,19 +1,15 @@
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+// import { invokeApi } from "../../../api/invokeApi";
+import { useDispatch } from "react-redux";
 import { getAction } from "../../../redux/util/util";
-import { useNavigate } from "react-router-dom";
 import Button from "../../../components/common/Button";
-import NavLink from "../../../components/common/NavLink";
 import TextField from "../../../components/common/TextField/TextField";
 
-const LoginForm = () => {
+const SignupForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const { isUserAuthenticated, authServerError } = useSelector(
-    (state) => state.AuthState
-  );
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
@@ -27,31 +23,38 @@ const LoginForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(getAction("USER_LOGIN", formData));
+    // Handle form submission logic here
+    dispatch(getAction("USER_REGISTER_REQUEST", formData));
+    console.log("Form submitted:", formData);
   };
-
-  useEffect(() => {
-    if (isUserAuthenticated) {
-      navigate("/dashboard");
-    }
-    if (authServerError) {
-      setError(authServerError);
-    }
-  }, [isUserAuthenticated, navigate, authServerError]);
-  useEffect(() => {
-    if (isUserAuthenticated) {
-      navigate("/dashboard");
-    }
-  }, []);
-
-  console.log("formData", formData);
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
       <div className='w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-lg'>
-        <h2 className='text-2xl font-bold text-center'>Log In</h2>
-        {error && <p className='text-red-500 text-center mb-4'>{error}</p>}
+        <h2 className='text-2xl font-bold text-center'>Sign Up</h2>
         <form onSubmit={handleSubmit} className='space-y-4'>
+          <div>
+            <TextField
+              label='First Name'
+              type='firstName'
+              name='firstName'
+              id='firstName'
+              isRequired
+              value={formData.firstName}
+              handleChange={handleChange}
+            />
+          </div>
+          <div>
+            <TextField
+              label='Last Name'
+              type='lastName'
+              name='lastName'
+              id='lastName'
+              isRequired
+              value={formData.lastName}
+              handleChange={handleChange}
+            />
+          </div>
           <div>
             <TextField
               label='Email'
@@ -74,17 +77,11 @@ const LoginForm = () => {
               handleChange={handleChange}
             />
           </div>
-          <Button type='submit'>Log In</Button>
+          <Button type='submit'> Sign Up</Button>
         </form>
-        <div className='mt-4 text-center'>
-          <NavLink to='/register'>Dont have Account? Register</NavLink>
-        </div>
-        <div className='mt-4 text-center'>
-          <NavLink to='/forgot-password'> Forgot Password ?</NavLink>
-        </div>
       </div>
     </div>
   );
 };
 
-export default LoginForm;
+export default SignupForm;

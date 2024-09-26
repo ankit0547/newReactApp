@@ -50,13 +50,6 @@ const AppRouter = () => {
             element={<ProtectedRoute component={rt.component} />}
           />
         ))}
-        {/* <Route path='/' element={<Home />} />
-        <Route
-          path='/dashboard'
-          element={<ProtectedRoute component={<Dashboard />} />}
-        />
-        <Route path='/login' element={<LoginForm />} />
-        <Route path='/register' element={<SignupForm />} /> */}
         <Route path='/*' element={<NotFound />} />
       </Routes>
     </>

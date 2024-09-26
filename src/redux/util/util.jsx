@@ -1,4 +1,4 @@
-export const getAction = (action, data) => {
+export const getAction = (action, data = null) => {
   if (!action || action === undefined) return "Action type not defined";
 
   return { type: action, payload: data };

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./components/home/home";
@@ -8,21 +9,25 @@ import SignupForm from "./modules/auth/signup/signup";
 import ProtectedRoute from "./components/common/protectedRoute";
 import ForgotPassword from "./modules/auth/forgotPassword/ForgotPassword";
 import ResetPassword from "./modules/auth/resetPassword/ResetPassword";
+import AppRouter from "./Router";
 
 function App() {
   return (
-    <Routes>
-      <Route path='/' element={<Home />} />
-      <Route
-        path='/dashboard'
-        element={<ProtectedRoute component={<Dashboard />} />}
-      />
-      <Route path='/login' element={<LoginForm />} />
-      <Route path='/logout' element={<SignupForm />} />
-      <Route path='/forgot-password' element={<ForgotPassword />} />
-      <Route path='/reset-password/:resetToken' element={<ResetPassword />} />
-      <Route path='/*' element={<NotFound />} />
-    </Routes>
+    <>
+      <AppRouter />
+      {/* <Routes>
+        <Route path='/' element={<Home />} />
+        <Route
+          path='/dashboard'
+          element={<ProtectedRoute component={<Dashboard />} />}
+        />
+        <Route path='/login' element={<LoginForm />} />
+        <Route path='/register' element={<SignupForm />} />
+        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route path='/reset-password/:resetToken' element={<ResetPassword />} />
+        <Route path='/*' element={<NotFound />} />
+      </Routes> */}
+    </>
   );
 }
 

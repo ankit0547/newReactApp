@@ -5,6 +5,8 @@ const initialState = {
   isUserAuthenticated: !!isAuth, // Convert token to boolean to check if logged in,
   resetPasswordMailSent: false,
   isPasswordReset: false,
+  authServerError: null,
+  userDetails: null,
 };
 
 const AuthReducer = (state = initialState, action) => {
@@ -15,6 +17,10 @@ const AuthReducer = (state = initialState, action) => {
       return { ...state, resetPasswordMailSent: action.payload };
     case "SET_RESET_PASSWORD":
       return { ...state, isPasswordReset: true };
+    case "SET_AUTH_SRVER_ERROR":
+      return { ...state, authServerError: action.payload };
+    case "SET_USER_DETAILS":
+      return { ...state, userDetails: action.payload };
     default:
       return state;
   }
