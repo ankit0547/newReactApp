@@ -5,6 +5,8 @@ import Home from "./components/home/home";
 import LoginForm from "./modules/auth/signin/signin";
 import SignupForm from "./modules/auth/signup/signup";
 import NotFound from "./components/notfound/notfound";
+import ForgotPassword from "./modules/auth/forgotPassword/ForgotPassword";
+import ResetPassword from "./modules/auth/resetPassword/ResetPassword";
 
 const routes = [
   {
@@ -25,6 +27,16 @@ const routes = [
   {
     path: "/register",
     component: <SignupForm />,
+    public: true,
+  },
+  {
+    path: "/forgot-password",
+    component: <ForgotPassword />,
+    public: true,
+  },
+  {
+    path: "/reset-password/:resetToken",
+    component: <ResetPassword />,
     public: true,
   },
 ];
