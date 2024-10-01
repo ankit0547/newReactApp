@@ -71,8 +71,6 @@ function* registerUser(action) {
 function* getUserDetails(action) {
   yield put(ProcessingStart());
   try {
-    // eslint-disable-next-line no-debugger
-    debugger;
     // Handle form submission logic here
     const data = yield invokeApi("USER_DETAILS", action.payload);
     if (data && data.status === 200) {

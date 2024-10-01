@@ -40,11 +40,19 @@ const TextField = ({
   name,
   id,
   isRequired,
+  isPrimary,
+  isSecondary,
 }) => {
   const [hidePassword, setHidePassword] = useState(false);
 
+  const { textField, primary, secondary } = styles;
+
   return (
-    <div className={styles.textField}>
+    <div
+      className={`${textField} ${isPrimary && primary}  ${
+        isSecondary && secondary
+      }`}
+    >
       <label htmlFor={id} className='block text-sm font-medium text-gray-700'>
         {label}
       </label>
@@ -56,7 +64,8 @@ const TextField = ({
         onChange={handleChange}
         required={isRequired}
         autoComplete={type === "password" ? "true" : "false"}
-        className='w-full px-3 py-2 mt-1 text-gray-700 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500'
+        className='w-full
+        } px-3 py-2 mt-1 text-gray-700 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500'
       />
       {type === "password" && (
         <span onClick={() => setHidePassword(!hidePassword)}>
@@ -75,15 +84,19 @@ TextField.propTypes = {
   name: PropType.string,
   id: PropType.string,
   isRequired: PropType.bool,
+  isPrimary: PropType.bool,
+  isSecondary: PropType.bool,
 };
 
-TextField.default = {
+TextField.defaultProps = {
   handleChange: undefined,
-  value: "",
+  value: "Testing",
   label: "",
   type: "",
   name: "",
   id: "",
   isRequired: true,
+  isPrimary: true,
+  isSecondary: undefined,
 };
 export default TextField;
