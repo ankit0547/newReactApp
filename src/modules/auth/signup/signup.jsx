@@ -2,7 +2,7 @@ import { useState } from "react";
 // import { invokeApi } from "../../../api/invokeApi";
 import { useDispatch } from "react-redux";
 import { getAction } from "../../../redux/util/util";
-import Button from "../../../components/common/Button";
+import Button from "../../../components/common/Button/Button";
 import TextField from "../../../components/common/TextField/TextField";
 
 const SignupForm = () => {
@@ -77,7 +77,7 @@ const SignupForm = () => {
               handleChange={handleChange}
             />
           </div>
-          <Button type='submit'> Sign Up</Button>
+          <Button label={"Sign Up"} type='submit' />
         </form>
       </div>
     </div>

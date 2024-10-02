@@ -90,8 +90,6 @@ function* forgotPassword(action) {
     const data = yield invokeApi("USER_FORGOT_PASSWORD", {
       email: action.payload,
     });
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (data && data.status === 200) {
       localStorage.clear();
       yield put(getAction("SET_RESET_PASSWORD_MAIL_SENT", true));
@@ -116,8 +114,6 @@ function* resetPassword(action) {
         resetToken: action.payload.resetToken,
       }
     );
-    // eslint-disable-next-line no-debugger
-    debugger;
     if (data && data.status === 200) {
       localStorage.clear();
       yield put(getAction("SET_RESET_PASSWORD"));

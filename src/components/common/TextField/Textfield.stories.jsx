@@ -6,13 +6,13 @@ export default {
 
 export const Primary = {
   args: {
-    label: " Button",
+    label: "Text Field",
     primary: true,
   },
 };
 export const Seconday = {
   args: {
-    label: "Button",
+    label: "Text Field",
     primary: true,
   },
 };

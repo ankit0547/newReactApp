@@ -15,8 +15,6 @@ const Dashboard = () => {
 
   console.log("userDetails", userDetails);
   useEffect(() => {
-    // eslint-disable-next-line no-debugger
-    debugger;
     dispatch(getAction("GET_USER_DETAILS"));
   });
 

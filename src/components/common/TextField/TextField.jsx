@@ -33,15 +33,15 @@ const EyeHide = () => (
 );
 
 const TextField = ({
-  handleChange,
-  value,
-  label,
-  type,
-  name,
-  id,
-  isRequired,
-  isPrimary,
-  isSecondary,
+  handleChange = undefined,
+  value = "Value",
+  label = "",
+  type = "",
+  name = "",
+  id = "",
+  isRequired = true,
+  isPrimary = true,
+  isSecondary = undefined,
 }) => {
   const [hidePassword, setHidePassword] = useState(false);
 
@@ -88,15 +88,4 @@ TextField.propTypes = {
   isSecondary: PropType.bool,
 };
 
-TextField.defaultProps = {
-  handleChange: undefined,
-  value: "Testing",
-  label: "",
-  type: "",
-  name: "",
-  id: "",
-  isRequired: true,
-  isPrimary: true,
-  isSecondary: undefined,
-};
 export default TextField;

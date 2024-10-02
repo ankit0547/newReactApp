@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAction } from "../../../redux/util/util";
 import { useNavigate } from "react-router-dom";
-import Button from "../../../components/common/Button";
+import Button from "../../../components/common/Button/Button";
 import NavLink from "../../../components/common/NavLink";
 import TextField from "../../../components/common/TextField/TextField";
 
@@ -74,7 +74,7 @@ const LoginForm = () => {
               handleChange={handleChange}
             />
           </div>
-          <Button type='submit'>Log In</Button>
+          <Button label={"Sign In"} type='submit' />
         </form>
         <div className='mt-4 text-center'>
           <NavLink to='/register'>Dont have Account? Register</NavLink>
