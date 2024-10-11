@@ -42,6 +42,7 @@ const TextField = ({
   isRequired = true,
   isPrimary = true,
   isSecondary = undefined,
+  placeHolder = "",
 }) => {
   const [hidePassword, setHidePassword] = useState(false);
 
@@ -60,6 +61,7 @@ const TextField = ({
         type={!hidePassword ? type : "text"}
         name={name}
         id={id}
+        placeholder={placeHolder}
         value={value}
         onChange={handleChange}
         required={isRequired}
@@ -79,6 +81,7 @@ const TextField = ({
 TextField.propTypes = {
   handleChange: PropType.func,
   value: PropType.string,
+  placeHolder: PropType.string,
   label: PropType.string,
   type: PropType.string,
   name: PropType.string,

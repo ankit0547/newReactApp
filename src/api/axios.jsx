@@ -36,8 +36,10 @@ axiosInstance.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
+        // eslint-disable-next-line no-debugger
+        debugger;
         const apiEndpoint = import.meta.env.VITE_APP_API_URL;
-        const endPoint = `${apiEndpoint}/users/refresh-token`;
+        const endPoint = `${apiEndpoint}/user/refresh-token`;
         const refreshToken = localStorage.getItem("refreshToken");
         const response = await axios.post(endPoint, {
           refreshToken,

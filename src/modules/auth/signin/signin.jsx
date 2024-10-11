@@ -32,7 +32,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (isUserAuthenticated) {
-      navigate("/dashboard");
+      navigate("/home");
     }
     if (authServerError) {
       setError(authServerError);
@@ -40,7 +40,7 @@ const LoginForm = () => {
   }, [isUserAuthenticated, navigate, authServerError]);
   useEffect(() => {
     if (isUserAuthenticated) {
-      navigate("/dashboard");
+      navigate("/home");
     }
   }, []);
 
