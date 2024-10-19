@@ -1,7 +1,7 @@
 .textField{
     position: relative;
 }
-.textField span{
+.textField .eye{
 color: red;
 position: absolute;
 right: 1rem;

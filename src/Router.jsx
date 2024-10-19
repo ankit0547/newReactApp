@@ -1,6 +1,8 @@
-import { lazy } from "react";
-import { Route, Routes } from "react-router-dom";
+import { lazy, useEffect, useRef } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 import ProtectedRoute from "./components/common/protectedRoute";
+import { useDispatch } from "react-redux";
+import { getAction } from "./redux/util/util";
 // import DashboardLayout from "./modules/dashboard/dashboardLayout";
 // import Profile from "./modules/dashboard/profile";
 const Home = lazy(() => import("./components/home/home"));
@@ -70,6 +72,23 @@ const routes = [
   },
 ];
 
+const ResetOnPathChange = ({ children }) => {
+  const location = useLocation(); // Detect path changes
+  const dispatch = useDispatch();
+  const prevPath = useRef(location.pathname);
+
+  useEffect(() => {
+    if (prevPath.current !== location.pathname) {
+      // dispatch(resetState()); // Reset Redux store
+      dispatch(getAction("RESET_STATE")); // Reset Redux store
+      // alert();
+      prevPath.current = location.pathname;
+    }
+  }, [location.pathname, dispatch]);
+
+  return children; // Render child components
+};
+
 const AppRouter = () => {
   const publicRoutes = routes.filter((r) => r.public);
   const privateRoutes = routes.filter((r) => !r.public);
@@ -78,31 +97,34 @@ const AppRouter = () => {
 
   return (
     <>
-      <Routes>
-        {publicRoutes.map((rt, i) => (
-          <Route
-            key={`public-route-${i}`}
-            path={rt.path}
-            element={rt.component}
-          />
-        ))}
-        {privateRoutes.map((rt, i) => (
-          <Route
-            key={`private-route-${i}`}
-            path={rt.path}
-            element={<ProtectedRoute component={rt.component} />}
-          >
-            {rt.nestedRoutes.map((nrt, i) => (
-              <Route
-                key={`nested-route-${i}`}
-                path={nrt.path}
-                element={nrt.component}
-              />
-            ))}
-          </Route>
-        ))}
-        <Route path='/*' element={<NotFound />} />
-      </Routes>
+      <ResetOnPathChange>
+        <Routes>
+          {publicRoutes.map((rt, i) => (
+            <Route
+              key={`public-route-${i}`}
+              path={rt.path}
+              element={rt.component}
+            />
+          ))}
+          {privateRoutes.map((rt, i) => (
+            <Route
+              key={`private-route-${i}`}
+              path={rt.path}
+              element={<ProtectedRoute component={rt.component} />}
+            >
+              {rt.nestedRoutes.map((nrt, i) => (
+                <Route
+                  key={`nested-route-${i}`}
+                  path={nrt.path}
+                  element={<ProtectedRoute component={nrt.component} />}
+                />
+              ))}
+            </Route>
+          ))}
+
+          <Route path='/*' element={<NotFound />} />
+        </Routes>
+      </ResetOnPathChange>
     </>
   );
 };

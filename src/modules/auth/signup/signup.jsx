@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // import { invokeApi } from "../../../api/invokeApi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAction } from "../../../redux/util/util";
+import { useNavigate } from "react-router-dom";
 import Button from "../../../components/common/Button/Button";
 import TextField from "../../../components/common/TextField/TextField";
+import NavLink from "../../../components/common/NavLink";
 
 const SignupForm = () => {
+  const { userDetails } = useSelector((state) => state.AuthState);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -27,6 +31,12 @@ const SignupForm = () => {
     dispatch(getAction("USER_REGISTER_REQUEST", formData));
     console.log("Form submitted:", formData);
   };
+
+  useEffect(() => {
+    if (userDetails === 200) {
+      navigate("/login");
+    }
+  }, [userDetails]);
 
   return (
     <div className='flex items-center justify-center min-h-screen bg-gray-100'>
@@ -79,6 +89,9 @@ const SignupForm = () => {
           </div>
           <Button label={"Sign Up"} type='submit' />
         </form>
+        <div className='mt-4 text-center'>
+          <NavLink to='/login'>Already have account? Login</NavLink>
+        </div>
       </div>
     </div>
   );

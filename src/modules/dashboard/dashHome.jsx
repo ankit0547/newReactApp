@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { getAction } from "../../redux/util/util";
+// import { useEffect } from "react";
+// import { useDispatch } from "react-redux";
+// import { getAction } from "../../redux/util/util";
 
 const DashHome = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getAction("GET_USER_DETAILS"));
-  }, []);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   dispatch(getAction("GET_USER_DETAILS"));
+  // }, []);
   return (
     <div>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>

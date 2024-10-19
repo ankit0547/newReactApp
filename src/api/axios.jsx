@@ -36,16 +36,14 @@ axiosInstance.interceptors.response.use(
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        // eslint-disable-next-line no-debugger
-        debugger;
         const apiEndpoint = import.meta.env.VITE_APP_API_URL;
         const endPoint = `${apiEndpoint}/user/refresh-token`;
         const refreshToken = localStorage.getItem("refreshToken");
-        const response = await axios.post(endPoint, {
-          refreshToken,
-        });
-        const { accessToken: newAccessToken } = response.data;
+        const response = await axios.post(endPoint, { refreshToken });
+        const newAccessToken = response.data.data.accessToken;
+        const newRefreshToken = response.data.data.refreshToken;
         localStorage.setItem("accessToken", newAccessToken);
+        localStorage.setItem("refreshToken", newRefreshToken);
         // Set the new access token in the original request headers
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         // Retry the original request with the new access token
@@ -53,6 +51,8 @@ axiosInstance.interceptors.response.use(
       } catch (refreshError) {
         console.error("Refresh token expired or invalid:", refreshError);
         // Optionally, handle logout or redirect to login
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
       }
     }
     return Promise.reject(error.response.data);

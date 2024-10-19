@@ -3,8 +3,8 @@ import { getAction } from "../../redux/util/util";
 import { Suspense, useEffect } from "react";
 import Sidebar from "./sidebar";
 import DashHeader from "./dashHeader";
-// import DashHome from "./dashHome";
 import { Outlet } from "react-router-dom";
+// import { toast, ToastContainer } from "react-toastify";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -14,9 +14,15 @@ const DashboardLayout = () => {
   useEffect(() => {
     dispatch(getAction("GET_USER_DETAILS"));
   }, []);
+  // useEffect(() => {
+  //   if (Object.keys(userDetails).length > 0) {
+  //     toast("Wow so easy!");
+  //   }
+  // }, [userDetails]);
 
   return (
     <div>
+      {/* <ToastContainer /> */}
       {/* <!-- Sidebar --> */}
       <div className='flex h-screen'>
         <Sidebar />

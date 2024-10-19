@@ -39,10 +39,11 @@ const TextField = ({
   type = "",
   name = "",
   id = "",
-  isRequired = true,
+  isRequired = false,
   isPrimary = true,
   isSecondary = undefined,
   placeHolder = "",
+  disabled = false,
 }) => {
   const [hidePassword, setHidePassword] = useState(false);
 
@@ -54,13 +55,17 @@ const TextField = ({
         isSecondary && secondary
       }`}
     >
-      <label htmlFor={id} className='block text-sm font-medium text-gray-700'>
-        {label}
+      <label
+        htmlFor={id}
+        className='block text-sm font-medium text-gray-700 relative'
+      >
+        {label} <span className='text-red-700'>*</span>
       </label>
       <input
         type={!hidePassword ? type : "text"}
         name={name}
         id={id}
+        disabled={disabled}
         placeholder={placeHolder}
         value={value}
         onChange={handleChange}
@@ -70,7 +75,10 @@ const TextField = ({
         } px-3 py-2 mt-1 text-gray-700 border rounded-md focus:outline-none focus:ring focus:ring-indigo-500'
       />
       {type === "password" && (
-        <span onClick={() => setHidePassword(!hidePassword)}>
+        <span
+          className='eye absolute right-2 bottom-[10px] cursor-pointer'
+          onClick={() => setHidePassword(!hidePassword)}
+        >
           {hidePassword ? <EyeShow /> : <EyeHide />}
         </span>
       )}
@@ -89,6 +97,7 @@ TextField.propTypes = {
   isRequired: PropType.bool,
   isPrimary: PropType.bool,
   isSecondary: PropType.bool,
+  disabled: PropType.bool,
 };
 
 export default TextField;
