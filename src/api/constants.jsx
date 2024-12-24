@@ -2,7 +2,7 @@
 export const apiConstants = [
   {
     actionType: "USER_LOGIN",
-    endpoint: `/user/login`,
+    endpoint: `/auth/login`,
     method: "POST",
   },
   {
@@ -12,17 +12,17 @@ export const apiConstants = [
   },
   {
     actionType: "USER_LOG_OUT",
-    endpoint: `/user/logout`,
+    endpoint: `/auth/logout`,
     method: "POST",
   },
   {
     actionType: "USER_FORGOT_PASSWORD",
-    endpoint: `/user/forgot-password`,
+    endpoint: `/auth/forgot-password`,
     method: "POST",
   },
   {
     actionType: "USER_PASSWORD_RESET",
-    endpoint: `/user/reset-password/:resetToken`,
+    endpoint: `/auth/reset-password/:resetToken`,
     method: "POST",
   },
   {

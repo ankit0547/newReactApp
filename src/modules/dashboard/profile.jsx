@@ -16,7 +16,7 @@ const Profile = () => {
             name='username'
             id='username'
             isRequired
-            value={userDetails?.profile.username}
+            value={userDetails?.username}
             placeHolder='Username'
             handleChange={() => undefined}
           />
@@ -29,7 +29,7 @@ const Profile = () => {
             id='email'
             isRequired
             disabled
-            value={userDetails?.profile.email}
+            value={userDetails?.email}
             placeHolder='email'
             handleChange={() => undefined}
           />
@@ -42,7 +42,7 @@ const Profile = () => {
             name='firstName'
             id='firstName'
             isRequired
-            value={userDetails?.profile.firstName}
+            value={userDetails?.firstName}
             placeHolder='First Name'
             handleChange={() => undefined}
           />
@@ -54,7 +54,7 @@ const Profile = () => {
             name='lastName'
             id='lastName'
             isRequired
-            value={userDetails?.profile.lastName}
+            value={userDetails?.lastName}
             placeHolder='Last Name'
             handleChange={() => undefined}
           />

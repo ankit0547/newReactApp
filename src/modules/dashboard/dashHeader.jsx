@@ -1,13 +1,14 @@
 import { useSelector } from "react-redux";
 
 const DashHeader = () => {
-  const { userDetails } = useSelector((state) => state.AuthState);
+  const {userDetails}  = useSelector((state) => state.AuthState);
+  console.log(userDetails);
   return (
     <>
       <header className='bg-white shadow-md py-4 px-6'>
         <div className='flex justify-between items-center'>
           <h2 className='text-xl font-semibold text-gray-800'>
-            {`Hi! Welcome ${userDetails?.profile.username}`}
+            {`Hi! Welcome ${userDetails?.username}`}
           </h2>
 
           <div className='flex space-x-4'>
