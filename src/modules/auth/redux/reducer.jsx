@@ -1,3 +1,5 @@
+import { authActionTypes } from "./actions";
+
 const accessToken = localStorage.getItem("accessToken"); // Retrieve accessToken from localStorage if exists
 const refreshToken = localStorage.getItem("accessToken"); // Retrieve refreshToken from localStorage if exists
 const isAuth = accessToken && refreshToken;
@@ -7,6 +9,7 @@ const initialState = {
   isPasswordReset: false,
   authServerError: null,
   userDetails: null,
+  rbac: null,
 };
 
 const AuthReducer = (state = initialState, action) => {
@@ -21,6 +24,11 @@ const AuthReducer = (state = initialState, action) => {
       return { ...state, authServerError: action.payload };
     case "SET_USER_DETAILS":
       return { ...state, userDetails: action.payload };
+    case authActionTypes.FETCH_USER_PERMISSIONS_SUCCESS:
+      return {
+        ...state,
+        role: action.payload,
+      };
     default:
       return state;
   }

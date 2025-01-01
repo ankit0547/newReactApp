@@ -30,4 +30,9 @@ export const apiConstants = [
     endpoint: `/user`,
     method: "GET",
   },
+  {
+    actionType: "GET_RBAC",
+    endpoint: `/auth/resources`,
+    method: "GET",
+  },
 ];

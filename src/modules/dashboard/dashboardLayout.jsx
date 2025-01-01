@@ -4,7 +4,7 @@ import { Suspense, useEffect } from "react";
 import Sidebar from "./sidebar";
 import DashHeader from "./dashHeader";
 import { Outlet } from "react-router-dom";
-// import { toast, ToastContainer } from "react-toastify";
+import { fetchUserPermissions } from "../../redux/actions";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -13,6 +13,7 @@ const DashboardLayout = () => {
   console.log("userDetails", userDetails);
   useEffect(() => {
     dispatch(getAction("GET_USER_DETAILS"));
+    dispatch(fetchUserPermissions());
   }, []);
   // useEffect(() => {
   //   if (Object.keys(userDetails).length > 0) {
@@ -24,14 +25,14 @@ const DashboardLayout = () => {
     <div>
       {/* <ToastContainer /> */}
       {/* <!-- Sidebar --> */}
-      <div className='flex h-screen'>
+      <div className="flex h-screen">
         <Sidebar />
         {/* <!-- Main Content --> */}
-        <div className='flex-grow'>
+        <div className="flex-grow">
           {/* <!-- Top Bar --> */}
           <DashHeader />
           {/* <!-- Dashboard Content --> */}
-          <main className='p-6'>
+          <main className="p-6">
             {/* <DashHome /> */}
             <Suspense fallback={<div>Loading...</div>}>
               <Outlet /> {/* Renders the nested route component here */}

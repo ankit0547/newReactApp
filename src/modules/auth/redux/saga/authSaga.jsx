@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { put, takeEvery } from "redux-saga/effects";
+import { put, takeEvery, takeLatest } from "redux-saga/effects";
 import {
   getAction,
   ProcessingEnd,
@@ -7,6 +7,10 @@ import {
 } from "../../../../redux/util/util";
 // import { apiConstants } from "../../../api/constants";
 import { invokeApi } from "../../../../api/invokeApi";
+import {
+  fetchUserPermissionsFailure,
+  fetchUserPermissionsSuccess,
+} from "../actions";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* loginUser(action) {
@@ -113,12 +117,27 @@ function* resetPassword(action) {
   }
 }
 
+function* fetchUserPermissionsSaga() {
+  try {
+    // eslint-disable-next-line no-debugger
+    debugger;
+    yield put(ProcessingStart());
+    const response = yield invokeApi("GET_RBAC");
+    yield put(fetchUserPermissionsSuccess(response.data));
+    yield put(ProcessingEnd());
+  } catch (error) {
+    yield put(fetchUserPermissionsFailure(error.message));
+    yield put(ProcessingEnd());
+  }
+}
+
 function* authSaga() {
   yield takeEvery("USER_LOGIN", loginUser);
   yield takeEvery("USER_LOGOUT", logoutUser);
   yield takeEvery("USER_REGISTER_REQUEST", registerUser);
   yield takeEvery("USER_PASSWORD_FORGOT", forgotPassword);
   yield takeEvery("RESET_PASSWORD", resetPassword);
+  yield takeLatest("FETCH_USER_PERMISSIONS", fetchUserPermissionsSaga);
 }
 
 export default authSaga;
