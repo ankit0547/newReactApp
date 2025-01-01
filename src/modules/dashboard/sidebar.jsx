@@ -1,62 +1,382 @@
-import { useDispatch } from "react-redux";
-import { getAction } from "../../redux/util/util";
-import { Link } from "react-router-dom";
+/* eslint-disable react/prop-types */
+// import { useDispatch } from "react-redux";
+// import { getAction } from "../../redux/util/util";
+// import { Link } from "react-router-dom";
 
-const sideMenuItems = [
-  {
-    to: "/home",
-    icon: "🏠",
-    label: "Home",
-  },
-  {
-    to: "/profile",
-    icon: "📊",
-    label: "Profile",
-  },
-  {
-    to: "/settings",
-    icon: "⚙️",
-    label: "Settings",
-  },
-];
+import { useState } from "react";
+
+// const sideMenuItems = [
+//   {
+//     to: "/home",
+//     icon: "🏠",
+//     label: "Home",
+//   },
+//   {
+//     to: "/profile",
+//     icon: "📊",
+//     label: "Profile",
+//   },
+//   {
+//     to: "/settings",
+//     icon: "⚙️",
+//     label: "Settings",
+//   },
+// ];
 
 const Sidebar = () => {
-  const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(getAction("USER_LOGOUT"));
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isNewGroupModalOpen, setIsNewGroupModalOpen] = useState(false);
+  const [isNewDmModalOpen, setIsNewDmModalOpen] = useState(false);
+  const [isGroupsCollapsed, setIsGroupsCollapsed] = useState(false);
+  const [isDmsCollapsed, setIsDmsCollapsed] = useState(false);
+  const groups = [
+    { id: 1, name: "Developers Group", members: ["John", "Alice", "Bob"] },
+    { id: 2, name: "Designers Group", members: ["Paul", "Lily"] },
+  ];
+
+  const dms = [
+    { id: 1, name: "John Doe" },
+    { id: 2, name: "Alice" },
+  ];
+
+  // Handle chat selection
+  const selectChat = () => {
+    // setActiveChat(chat.id);
+    // setActiveChat(chat);
+    // setChatType(chat.type); // 'group' or 'dm'
+    // setMessages([]); // Replace with actual messages based on selected chat
+  };
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
+
+  const toggleNewGroupModal = () => {
+    setIsNewGroupModalOpen((prev) => !prev);
+  };
+
+  const toggleNewDmModal = () => {
+    setIsNewDmModalOpen((prev) => !prev);
+  };
+
+  const toggleGroups = () => {
+    setIsGroupsCollapsed(!isGroupsCollapsed);
+  };
+
+  const toggleDms = () => {
+    setIsDmsCollapsed(!isDmsCollapsed);
   };
 
   return (
     <>
-      <aside className='w-64 bg-gray-800 text-white flex flex-col'>
-        <div className='flex items-center justify-center h-16'>
-          <h1 className='text-xl font-bold'>Admin</h1>
-        </div>
-        <nav className='flex-grow'>
-          <ul className='space-y-2 px-4'>
-            {sideMenuItems.map((sm, i) => (
-              <li key={`sidemenu-list-item-${i}`}>
-                <Link
-                  to={sm.to}
-                  className='flex items-center p-2 text-gray-300 hover:bg-gray-700 rounded-md'
-                >
-                  <span>{sm.icon}</span>
-                  <span className='ml-2'>{sm.label}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className='p-4'>
-          <button
-            className='w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md'
-            onClick={handleLogout}
+      <div
+        className={`${
+          isSidebarCollapsed ? "w-20" : "w-1/4"
+        } bg-white border-r transition-all duration-300 ease-in-out hidden md:block`}
+      >
+        <div className="p-4 border-b flex justify-between items-center">
+          <h2
+            className={`text-lg font-semibold ${
+              isSidebarCollapsed && "hidden"
+            }`}
           >
-            Logout
+            Chats
+          </h2>
+          <button onClick={toggleSidebar} className="text-gray-600">
+            {isSidebarCollapsed ? (
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                ></path>
+              </svg>
+            ) : (
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                ></path>
+              </svg>
+            )}
           </button>
         </div>
-      </aside>
+        <div className="p-4 space-y-4">
+          {/* Groups */}
+          <div>
+            <div
+              className={`flex justify-between items-center mb-4 ${
+                isSidebarCollapsed && "hidden"
+              }`}
+            >
+              <div className="flex items-center">
+                <button onClick={toggleGroups} className="text-gray-600">
+                  {isGroupsCollapsed ? (
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 5l7 7-7 7"
+                      ></path>
+                    </svg>
+                  ) : (
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  )}
+                </button>
+                <h3
+                  className={`font-semibold ${isSidebarCollapsed && "hidden"}`}
+                >
+                  Groups
+                </h3>
+              </div>
+              <button onClick={toggleNewGroupModal} className="text-gray-600">
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+            {!isGroupsCollapsed && (
+              <ul className="space-y-2">
+                {groups.map((group) => (
+                  <li key={group.id}>
+                    <a
+                      href="#"
+                      onClick={() =>
+                        selectChat({
+                          id: group.id,
+                          name: group.name,
+                          type: "group",
+                        })
+                      }
+                      className="block p-2 rounded hover:bg-gray-200"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+                        <span
+                          className={`font-medium ${
+                            isSidebarCollapsed && "hidden"
+                          }`}
+                        >
+                          {group.name}
+                        </span>
+                      </div>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          {/* DMs */}
+          <div>
+            <div
+              className={`flex justify-between items-center mb-4 ${
+                isSidebarCollapsed && "hidden"
+              }`}
+            >
+              <div className="flex items-center">
+                <button onClick={toggleDms} className="text-gray-600">
+                  {isDmsCollapsed ? (
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M9 5l7 7-7 7"
+                      ></path>
+                    </svg>
+                  ) : (
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M19 9l-7 7-7-7"
+                      ></path>
+                    </svg>
+                  )}
+                </button>
+                <h3
+                  className={`font-semibold ${isSidebarCollapsed && "hidden"}`}
+                >
+                  Direct Messages
+                </h3>
+              </div>
+              <button onClick={toggleNewDmModal} className="text-gray-600">
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 4v16m8-8H4"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+            {!isDmsCollapsed && (
+              <ul className="space-y-2">
+                {dms.map((dm) => (
+                  <li key={dm.id}>
+                    <a
+                      href="#"
+                      onClick={() =>
+                        selectChat({ id: dm.id, name: dm.name, type: "dm" })
+                      }
+                      className="block p-2 rounded hover:bg-gray-200"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+                        <span
+                          className={`font-medium ${
+                            isSidebarCollapsed && "hidden"
+                          }`}
+                        >
+                          {dm.name}
+                        </span>
+                      </div>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Modals */}
+      {isNewGroupModalOpen && <NewGroupModal onClose={toggleNewGroupModal} />}
+      {isNewDmModalOpen && <NewDmModal onClose={toggleNewDmModal} />}
     </>
+  );
+};
+
+const NewGroupModal = ({ onClose }) => {
+  return (
+    <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white p-6 rounded-lg w-96">
+        <h2 className="text-2xl font-semibold mb-4">Create New Group</h2>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Group Name
+          </label>
+          <input
+            type="text"
+            className="mt-2 w-full p-3 border border-gray-300 rounded-lg"
+            placeholder="Enter group name"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Participants
+          </label>
+          {/* Add participant selection here */}
+        </div>
+
+        <div className="flex justify-end space-x-2">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onClose}
+            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
+          >
+            Create Group
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const NewDmModal = ({ onClose }) => {
+  return (
+    <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
+      <div className="bg-white p-6 rounded-lg w-96">
+        <h2 className="text-2xl font-semibold mb-4">New DM</h2>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">
+            Select a person to chat
+          </label>
+          {/* Add user selection for DM */}
+        </div>
+
+        <div className="flex justify-end space-x-2">
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onClose}
+            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
+          >
+            Start Chat
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { getAction } from "./redux/util/util";
 // import DashboardLayout from "./modules/dashboard/dashboardLayout";
 // import Profile from "./modules/dashboard/profile";
-const Home = lazy(() => import("./components/home/home"));
+// const Home = lazy(() => import("./components/home/home"));
 const LoginForm = lazy(() => import("./modules/auth/signin/signin"));
 const DashHome = lazy(() => import("./modules/dashboard/dashHome"));
 const DashboardLayout = lazy(() =>
@@ -25,7 +25,7 @@ const NotFound = lazy(() => import("./components/notfound/notfound"));
 const routes = [
   {
     path: "/",
-    component: <Home />,
+    component: <LoginForm />,
     public: true,
   },
   {
@@ -122,7 +122,7 @@ const AppRouter = () => {
             </Route>
           ))}
 
-          <Route path='/*' element={<NotFound />} />
+          <Route path="/*" element={<NotFound />} />
         </Routes>
       </ResetOnPathChange>
     </>

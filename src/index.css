@@ -12,3 +12,23 @@
     height: 100%;
     z-index: 10;
 }
+
+
+.overflow-x-auto::-webkit-scrollbar, .overflow-y-auto::-webkit-scrollbar {
+    width: 12px !important;
+    height: 12px !important;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar, .overflow-y-auto::-webkit-scrollbar {
+    display: block;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar-track, .overflow-y-auto::-webkit-scrollbar-track {
+    background-color: #F7F7F7 !important;
+    border-radius: 2px !important;
+  }
+  
+  .overflow-x-auto::-webkit-scrollbar-thumb, .overflow-y-auto::-webkit-scrollbar-thumb {
+    border-radius: 10px !important;
+    background-color: #CDCCCC !important; 
+  }

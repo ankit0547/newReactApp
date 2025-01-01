@@ -120,7 +120,7 @@ function* resetPassword(action) {
 function* fetchUserPermissionsSaga() {
   try {
     // eslint-disable-next-line no-debugger
-    debugger;
+    // debugger;
     yield put(ProcessingStart());
     const response = yield invokeApi("GET_RBAC");
     yield put(fetchUserPermissionsSuccess(response.data));
