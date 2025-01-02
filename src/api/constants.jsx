@@ -35,4 +35,9 @@ export const apiConstants = [
     endpoint: `/auth/resources`,
     method: "GET",
   },
+  {
+    actionType: "ALL_USERS",
+    endpoint: `/user/all`,
+    method: "GET",
+  },
 ];

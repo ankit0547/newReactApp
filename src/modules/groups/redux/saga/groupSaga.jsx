@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 import { put, takeEvery } from "redux-saga/effects";
-// import { invokeApi } from "../../../api/invokeApi";
+
 import {
   getAction,
   ProcessingEnd,
   ProcessingStart,
 } from "../../../../redux/util/util";
-// import { apiConstants } from "../../../api/constants";
+
 import { invokeApi } from "../../../../api/invokeApi";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
@@ -40,9 +40,9 @@ function* getAllUsers(action) {
   }
 }
 
-function* dashboardSaga() {
+function* groupSaga() {
   yield takeEvery("GET_USER_DETAILS", getUserDetails);
   yield takeEvery("GET_ALL_USERS", getAllUsers);
 }
 
-export default dashboardSaga;
+export default groupSaga;

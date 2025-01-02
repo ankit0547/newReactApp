@@ -1,9 +1,6 @@
 /* eslint-disable react/prop-types */
-// import { useDispatch } from "react-redux";
-// import { getAction } from "../../redux/util/util";
-// import { Link } from "react-router-dom";
-
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 // const sideMenuItems = [
 //   {
@@ -34,10 +31,18 @@ const Sidebar = () => {
     { id: 2, name: "Designers Group", members: ["Paul", "Lily"] },
   ];
 
-  const dms = [
-    { id: 1, name: "John Doe" },
-    { id: 2, name: "Alice" },
-  ];
+  const { allUsers } = useSelector((state) => state.DashboardStates);
+
+  // console.log("allUser", allUsers);
+
+  const dms = allUsers;
+
+  console.log("allUser", allUsers);
+  // const dms = [
+  //   { id: 1, name: "John Doe" },
+  //   { id: 2, name: "Alice" },
+  // ];
+  // const { userDetails } = useSelector((state) => state.AuthState);
 
   // Handle chat selection
   const selectChat = () => {
@@ -270,7 +275,7 @@ const Sidebar = () => {
             </div>
             {!isDmsCollapsed && (
               <ul className="space-y-2">
-                {dms.map((dm) => (
+                {dms?.map((dm) => (
                   <li key={dm.id}>
                     <a
                       href="#"
@@ -280,13 +285,21 @@ const Sidebar = () => {
                       className="block p-2 rounded hover:bg-gray-200"
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
+                        <div className="w-10 h-10 bg-gray-300 rounded-full">
+                          <div className="w-10 h-10 bg-gray-300 rounded-full">
+                            <img
+                              src={dm?.avatar.url}
+                              alt={dm?.avatar.url}
+                              className="w-10 h-10 rounded-full"
+                            />
+                          </div>
+                        </div>
                         <span
                           className={`font-medium ${
                             isSidebarCollapsed && "hidden"
                           }`}
                         >
-                          {dm.name}
+                          {dm.firstName} {dm.lastName}
                         </span>
                       </div>
                     </a>
@@ -349,6 +362,7 @@ const NewGroupModal = ({ onClose }) => {
 };
 
 const NewDmModal = ({ onClose }) => {
+  const { allUsers } = useSelector((state) => state.DashboardState);
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg w-96">
@@ -359,6 +373,32 @@ const NewDmModal = ({ onClose }) => {
             Select a person to chat
           </label>
           {/* Add user selection for DM */}
+          <ul className="space-y-2">
+            {allUsers.map((dm) => (
+              <li key={dm.id}>
+                <a
+                  // href={dm?.avatar.url}
+                  // onClick={() =>
+                  //   selectChat({ id: dm.id, name: dm.name, type: "dm" })
+                  // }
+                  className="block p-2 rounded hover:bg-gray-200"
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-gray-300 rounded-full">
+                      <img
+                        src={dm?.avatar.url}
+                        alt={dm?.avatar.url}
+                        className="w-10 h-10 rounded-full"
+                      />
+                    </div>
+                    <span className={`font-medium`}>
+                      {dm.firstName} {dm.lastName}
+                    </span>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="flex justify-end space-x-2">

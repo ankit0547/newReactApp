@@ -8,7 +8,7 @@ import TextField from "../../../components/common/TextField/TextField";
 import NavLink from "../../../components/common/NavLink";
 
 const SignupForm = () => {
-  const { userDetails } = useSelector((state) => state.AuthState);
+  const { userDetails } = useSelector((state) => state.AuthStates);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -39,16 +39,16 @@ const SignupForm = () => {
   }, [userDetails]);
 
   return (
-    <div className='flex items-center justify-center min-h-screen bg-gray-100'>
-      <div className='w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-lg'>
-        <h2 className='text-2xl font-bold text-center'>Sign Up</h2>
-        <form onSubmit={handleSubmit} className='space-y-4'>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-lg">
+        <h2 className="text-2xl font-bold text-center">Sign Up</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <TextField
-              label='First Name'
-              type='firstName'
-              name='firstName'
-              id='firstName'
+              label="First Name"
+              type="firstName"
+              name="firstName"
+              id="firstName"
               isRequired
               value={formData.firstName}
               handleChange={handleChange}
@@ -56,10 +56,10 @@ const SignupForm = () => {
           </div>
           <div>
             <TextField
-              label='Last Name'
-              type='lastName'
-              name='lastName'
-              id='lastName'
+              label="Last Name"
+              type="lastName"
+              name="lastName"
+              id="lastName"
               isRequired
               value={formData.lastName}
               handleChange={handleChange}
@@ -67,10 +67,10 @@ const SignupForm = () => {
           </div>
           <div>
             <TextField
-              label='Email'
-              type='email'
-              name='email'
-              id='email'
+              label="Email"
+              type="email"
+              name="email"
+              id="email"
               isRequired
               value={formData.email}
               handleChange={handleChange}
@@ -78,19 +78,19 @@ const SignupForm = () => {
           </div>
           <div>
             <TextField
-              label='Password'
-              type='password'
-              name='password'
-              id='password'
+              label="Password"
+              type="password"
+              name="password"
+              id="password"
               isRequired
               value={formData.password}
               handleChange={handleChange}
             />
           </div>
-          <Button label={"Sign Up"} type='submit' />
+          <Button label={"Sign Up"} type="submit" />
         </form>
-        <div className='mt-4 text-center'>
-          <NavLink to='/login'>Already have account? Login</NavLink>
+        <div className="mt-4 text-center">
+          <NavLink to="/login">Already have account? Login</NavLink>
         </div>
       </div>
     </div>

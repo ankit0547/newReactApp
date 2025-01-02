@@ -5,16 +5,21 @@ import { useEffect } from "react";
 import Sidebar from "./sidebar";
 // import DashHeader from "./dashHeader";
 // import { Outlet } from "react-router-dom";
-import { fetchUserPermissions } from "../../redux/actions";
+// import { fetchUserPermissions } from "../../redux/actions";
+import DashHeader from "./dashHeader";
+import ChatArea from "./chatArea";
+import { io } from "socket.io-client";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
-  const { userDetails } = useSelector((state) => state.AuthState);
+  const socket = io("http://localhost:7800");
+  const { allUser } = useSelector((state) => state.DashboardStates);
 
-  console.log("userDetails", userDetails);
+  // Join the server
+  socket.emit("join", { userId: allUser?._id });
+  console.log("userDetails", allUser);
   useEffect(() => {
-    dispatch(getAction("GET_USER_DETAILS"));
-    dispatch(fetchUserPermissions());
+    dispatch(getAction("GET_ALL_USERS"));
   }, []);
 
   // Sample groups and DM data
@@ -24,44 +29,16 @@ const DashboardLayout = () => {
     { fromMe: false, content: "Hello!" },
   ];
 
-  const handleLogout = () => {
-    dispatch(getAction("USER_LOGOUT"));
-  };
   return (
     <>
       <div className="flex h-screen bg-gray-100">
         <Sidebar />
         {/* Chat Window */}
         <div className="flex-1 flex flex-col">
-          <div className="flex items-center justify-between p-4 bg-white border-b">
-            <h3 className="text-lg font-semibold">{"Select a chat"}</h3>
-            <button
-              className="text-red-600 hover:text-red-800"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-          </div>
+          <DashHeader />
           <div className="flex-1 p-4 overflow-y-auto bg-gray-50">
             {/* Messages */}
-            <div className="space-y-4">
-              {messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`flex ${
-                    message.fromMe ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`${
-                      message.fromMe ? "bg-blue-500" : "bg-gray-300"
-                    } text-white p-3 rounded-lg max-w-xs`}
-                  >
-                    {message.content}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <ChatArea messages={messages} />
           </div>
           <div className="p-4 bg-white border-t">
             <div className="flex items-center space-x-2">
@@ -82,8 +59,3 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
-{
-  /* <div>
-<button onClick={handleLogout}>Logout</button>
-</div> */
-}

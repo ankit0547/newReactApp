@@ -11,7 +11,7 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const { isPasswordReset } = useSelector((state) => state.AuthState);
+  const { isPasswordReset } = useSelector((state) => state.AuthStates);
   const { resetToken } = useParams();
 
   const handleSubmit = (e) => {
@@ -35,51 +35,51 @@ const ResetPassword = () => {
     }
   }, [isPasswordReset]);
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-100'>
-      <div className='w-full max-w-md bg-white shadow-md rounded-lg p-8'>
-        <h2 className='text-2xl font-bold text-center mb-6'>Reset Password</h2>
-        {error && <p className='text-red-500 text-center mb-4'>{error}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-8">
+        <h2 className="text-2xl font-bold text-center mb-6">Reset Password</h2>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         {successMessage && (
-          <p className='text-green-500 text-center mb-4'>{successMessage}</p>
+          <p className="text-green-500 text-center mb-4">{successMessage}</p>
         )}
-        <form onSubmit={handleSubmit} className='space-y-6'>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
-              htmlFor='password'
-              className='block text-sm font-medium text-gray-700'
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
             >
               New Password
             </label>
             <input
-              type='password'
-              id='password'
+              type="password"
+              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-              placeholder='Enter your new password'
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter your new password"
             />
           </div>
           <div>
             <label
-              htmlFor='confirm-password'
-              className='block text-sm font-medium text-gray-700'
+              htmlFor="confirm-password"
+              className="block text-sm font-medium text-gray-700"
             >
               Confirm New Password
             </label>
             <input
-              type='password'
-              id='confirm-password'
+              type="password"
+              id="confirm-password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className='mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500'
-              placeholder='Confirm your new password'
+              className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Confirm your new password"
             />
           </div>
           <button
-            type='submit'
-            className='w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-700 transition duration-150'
+            type="submit"
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-700 transition duration-150"
           >
             Reset Password
           </button>
