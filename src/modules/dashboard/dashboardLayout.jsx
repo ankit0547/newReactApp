@@ -8,15 +8,20 @@ import Sidebar from "./sidebar";
 // import { fetchUserPermissions } from "../../redux/actions";
 import DashHeader from "./dashHeader";
 import ChatArea from "./chatArea";
-import { io } from "socket.io-client";
+import SocketIO from "../../api/socketIo/SocketIO";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
-  const socket = io("http://localhost:7800");
+
   const { allUser } = useSelector((state) => state.DashboardStates);
 
+  const tt = new SocketIO();
+  tt.on("connect", (data) => {
+    console.log("data", data);
+  });
+
   // Join the server
-  socket.emit("join", { userId: allUser?._id });
+  // socket.emit("join", { userId: allUser?._id });
   console.log("userDetails", allUser);
   useEffect(() => {
     dispatch(getAction("GET_ALL_USERS"));

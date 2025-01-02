@@ -31,26 +31,19 @@ const Sidebar = () => {
     { id: 2, name: "Designers Group", members: ["Paul", "Lily"] },
   ];
 
-  const { allUsers } = useSelector((state) => state.DashboardStates);
+  // const { allUsers } = useSelector((state) => state.DashboardStates);
 
   // console.log("allUser", allUsers);
 
-  const dms = allUsers;
-
-  console.log("allUser", allUsers);
-  // const dms = [
-  //   { id: 1, name: "John Doe" },
-  //   { id: 2, name: "Alice" },
-  // ];
-  // const { userDetails } = useSelector((state) => state.AuthState);
+  const dms = [];
 
   // Handle chat selection
-  const selectChat = () => {
-    // setActiveChat(chat.id);
-    // setActiveChat(chat);
-    // setChatType(chat.type); // 'group' or 'dm'
-    // setMessages([]); // Replace with actual messages based on selected chat
-  };
+  // const handleSelectChat = (user) => {
+  //   // setActiveChat(chat.id);
+  //   setSelectChat(user);
+  //   // setChatType(chat.type); // 'group' or 'dm'
+  //   // setMessages([]); // Replace with actual messages based on selected chat
+  // };
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
@@ -186,13 +179,13 @@ const Sidebar = () => {
                   <li key={group.id}>
                     <a
                       href="#"
-                      onClick={() =>
-                        selectChat({
-                          id: group.id,
-                          name: group.name,
-                          type: "group",
-                        })
-                      }
+                      // onClick={() =>
+                      //   selectChat({
+                      //     id: group.id,
+                      //     name: group.name,
+                      //     type: "group",
+                      //   })
+                      // }
                       className="block p-2 rounded hover:bg-gray-200"
                     >
                       <div className="flex items-center space-x-3">
@@ -220,37 +213,39 @@ const Sidebar = () => {
               }`}
             >
               <div className="flex items-center">
-                <button onClick={toggleDms} className="text-gray-600">
-                  {isDmsCollapsed ? (
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 5l7 7-7 7"
-                      ></path>
-                    </svg>
-                  ) : (
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19 9l-7 7-7-7"
-                      ></path>
-                    </svg>
-                  )}
-                </button>
+                {dms.length > 0 && (
+                  <button onClick={toggleDms} className="text-gray-600">
+                    {isDmsCollapsed ? (
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 5l7 7-7 7"
+                        ></path>
+                      </svg>
+                    ) : (
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19 9l-7 7-7-7"
+                        ></path>
+                      </svg>
+                    )}
+                  </button>
+                )}
                 <h3
                   className={`font-semibold ${isSidebarCollapsed && "hidden"}`}
                 >
@@ -279,9 +274,9 @@ const Sidebar = () => {
                   <li key={dm.id}>
                     <a
                       href="#"
-                      onClick={() =>
-                        selectChat({ id: dm.id, name: dm.name, type: "dm" })
-                      }
+                      // onClick={() =>
+                      //   selectChat({ id: dm.id, name: dm.name, type: "dm" })
+                      // }
                       className="block p-2 rounded hover:bg-gray-200"
                     >
                       <div className="flex items-center space-x-3">
@@ -362,7 +357,14 @@ const NewGroupModal = ({ onClose }) => {
 };
 
 const NewDmModal = ({ onClose }) => {
-  const { allUsers } = useSelector((state) => state.DashboardState);
+  const [selectChat, setSelectChat] = useState(null);
+  const { allUsers } = useSelector((state) => state.DashboardStates);
+
+  console.log("selectChat", selectChat, allUsers);
+
+  const handleSelectChat = (user) => {
+    setSelectChat(user);
+  };
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg w-96">
@@ -375,28 +377,61 @@ const NewDmModal = ({ onClose }) => {
           {/* Add user selection for DM */}
           <ul className="space-y-2">
             {allUsers.map((dm) => (
-              <li key={dm.id}>
-                <a
+              <li key={dm._id}>
+                <button
                   // href={dm?.avatar.url}
-                  // onClick={() =>
-                  //   selectChat({ id: dm.id, name: dm.name, type: "dm" })
-                  // }
+                  onClick={() =>
+                    handleSelectChat({
+                      userId: dm._id,
+                      name: `${dm.firstName} ${dm.lastName}`,
+                      type: "dm",
+                    })
+                  }
                   className="block p-2 rounded hover:bg-gray-200"
                 >
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gray-300 rounded-full">
+                    <div className="relative w-10 h-10 bg-gray-300 rounded-full">
                       <img
                         src={dm?.avatar.url}
-                        alt={dm?.avatar.url}
+                        alt={`${dm?.firstName} ${dm?.lastName}`}
                         className="w-10 h-10 rounded-full"
                       />
+                      <span
+                        className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ${
+                          dm.isOnline ? "bg-green-500" : "bg-gray-400"
+                        } border-2 border-white`}
+                        title={dm.isOnline ? "Online" : "Offline"}
+                      />
                     </div>
-                    <span className={`font-medium`}>
+                    <span className="font-medium">
                       {dm.firstName} {dm.lastName}
                     </span>
                   </div>
-                </a>
+                </button>
               </li>
+
+              // <li key={dm.id}>
+              //   <a
+              //     // href={dm?.avatar.url}
+              //     // onClick={() =>
+              //     //   selectChat({ id: dm.id, name: dm.name, type: "dm" })
+              //     // }
+              //     className="block p-2 rounded hover:bg-gray-200"
+              //   >
+              //     <div className="flex items-center space-x-3">
+              //       <div className="w-10 h-10 bg-gray-300 rounded-full">
+              //         <img
+              //           src={dm?.avatar.url}
+              //           alt={dm?.avatar.url}
+              //           className="w-10 h-10 rounded-full"
+              //         />
+              //       </div>
+              //       <span className={`font-medium`}>
+              //         {dm.firstName} {dm.lastName}
+              //       </span>
+              //     </div>
+              //   </a>
+              // </li>
             ))}
           </ul>
         </div>

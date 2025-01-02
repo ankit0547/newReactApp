@@ -11,7 +11,7 @@ import { invokeApi } from "../../../../api/invokeApi";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 
-function* getUserDetails(action) {
+function* createNewChat(action) {
   yield put(ProcessingStart());
   try {
     // Handle form submission logic here
@@ -25,24 +25,9 @@ function* getUserDetails(action) {
     yield put(ProcessingEnd());
   }
 }
-function* getAllUsers(action) {
-  yield put(ProcessingStart());
-  try {
-    // Handle form submission logic here
-    const data = yield invokeApi("ALL_USERS", action.payload);
-    if (data && data.status === 200) {
-      yield put(getAction("SET_ALL_USERS", data.data));
-      yield put(ProcessingEnd());
-    }
-  } catch (e) {
-    yield put({ type: "USER_FETCH_FAILED", message: e.message });
-    yield put(ProcessingEnd());
-  }
-}
 
 function* chatSaga() {
-  yield takeEvery("GET_USER_DETAILS", getUserDetails);
-  yield takeEvery("GET_ALL_USERS", getAllUsers);
+  yield takeEvery("CREATE_NEW_CHAT", createNewChat);
 }
 
 export default chatSaga;
