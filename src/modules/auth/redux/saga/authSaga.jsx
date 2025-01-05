@@ -47,10 +47,6 @@ function* loginUser(action) {
         // eslint-disable-next-line no-debugger
         // debugger;
         console.log("socket", socket.socket.id);
-        const session = yield invokeApi("CHAT_SESSION", {
-          userId: data.data.user._id,
-          socketId: socket.socket.id,
-        });
 
         yield put(getAction("SET_USER_AUTH", true));
         yield put(ProcessingEnd());

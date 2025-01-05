@@ -45,4 +45,9 @@ export const apiConstants = [
     endpoint: `/chat/`,
     method: "GET",
   },
+  {
+    actionType: "CREATE_NEW_CHAT",
+    endpoint: `/chat/c/:receiverId`,
+    method: "POST",
+  },
 ];

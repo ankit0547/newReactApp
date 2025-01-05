@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getAction } from "../../redux/util/util";
 
 // const sideMenuItems = [
 //   {
@@ -276,8 +277,8 @@ const Sidebar = () => {
                         <div className="w-10 h-10 bg-gray-300 rounded-full">
                           <div className="w-10 h-10 bg-gray-300 rounded-full">
                             <img
-                              src={dm?.avatar.url}
-                              alt={dm?.avatar.url}
+                              // src={dm?.avatar.url}
+                              // alt={dm?.avatar.url}
                               className="w-10 h-10 rounded-full"
                             />
                           </div>
@@ -352,6 +353,7 @@ const NewGroupModal = ({ onClose }) => {
 const NewDmModal = ({ onClose }) => {
   // eslint-disable-next-line no-unused-vars
   const [selectChat, setSelectChat] = useState([]);
+  const dispatch = useDispatch();
   const { allUsers } = useSelector((state) => state.DashboardStates);
 
   console.log("selectChat", selectChat, allUsers);
@@ -359,6 +361,9 @@ const NewDmModal = ({ onClose }) => {
   const handleSelectChat = (user) => {
     if (selectChat.length > 1) return;
     setSelectChat([user]);
+    // eslint-disable-next-line no-debugger
+    // debugger;
+    dispatch(getAction("START_NEW_CHAT", user.userId));
   };
 
   // const handleStartChat = () => {
