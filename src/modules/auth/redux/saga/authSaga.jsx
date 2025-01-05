@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { put, takeEvery, takeLatest } from "redux-saga/effects";
+import { put, takeEvery, takeLatest, call, take } from "redux-saga/effects";
 import {
   getAction,
   ProcessingEnd,
@@ -11,6 +11,12 @@ import {
   fetchUserPermissionsFailure,
   fetchUserPermissionsSuccess,
 } from "../actions";
+import SocketIO from "../../../../api/socketIo/SocketIO";
+import { setSocketId } from "../../../dashboard/redux/actions";
+import { eventChannel } from "redux-saga";
+import { createSocketChannel } from "../../../../api/socketIo/channel";
+
+let socket; // Declare the socket instance globally within the saga module
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* loginUser(action) {
@@ -31,8 +37,28 @@ function* loginUser(action) {
       const localRefreshToken = localStorage.getItem("refreshToken");
 
       if (localAccessToken && localRefreshToken) {
+        socket = yield new SocketIO(localAccessToken);
+        // Wait for the socket connection to be established
+        yield new Promise((resolve) => socket.on("connect", resolve));
+        // Wait for the socket to connect
+        // Create a channel for socket events
+
+        const socketChannel = yield call(createSocketChannel, socket);
+        // eslint-disable-next-line no-debugger
+        // debugger;
+        console.log("socket", socket.socket.id);
+        const session = yield invokeApi("CHAT_SESSION", {
+          userId: data.data.user._id,
+          socketId: socket.socket.id,
+        });
+
         yield put(getAction("SET_USER_AUTH", true));
         yield put(ProcessingEnd());
+        // Listen to events from the channel
+        while (true) {
+          const action = yield take(socketChannel);
+          yield put(action); // Dispatch the action (e.g., SET_SOCKET_ID or NEW_MESSAGE)
+        }
       }
     }
   } catch (e) {
@@ -49,6 +75,13 @@ function* logoutUser(action) {
     const data = yield invokeApi("USER_LOG_OUT");
     if (data && data.status === 200) {
       localStorage.clear();
+      // Disconnect the Socket.IO connection
+      if (socket) {
+        yield call([socket, "disconnect"]);
+        socket = null; // Clean up the socket instance
+        console.log("Socket disconnected on logout");
+      }
+
       yield put(getAction("SET_USER_AUTH", false));
       yield put(ProcessingEnd());
     }
@@ -119,8 +152,6 @@ function* resetPassword(action) {
 
 function* fetchUserPermissionsSaga() {
   try {
-    // eslint-disable-next-line no-debugger
-    // debugger;
     yield put(ProcessingStart());
     const response = yield invokeApi("GET_RBAC");
     yield put(fetchUserPermissionsSuccess(response.data));
@@ -131,6 +162,39 @@ function* fetchUserPermissionsSaga() {
   }
 }
 
+// Socket Initialization Saga
+function* initSocketSaga() {
+  try {
+    const accessToken = yield localStorage.getItem("accessToken"); // Retrieve token from storage
+    if (accessToken && !socket) {
+      socket = new SocketIO(accessToken); // Initialize socket
+      // Wait for the socket connection to be established
+      yield new Promise((resolve) => socket.on("connect", resolve));
+      console.log("Socket initialized!");
+      // Wait for the socket to connect
+      // Create a channel for socket events
+      const socketChannel = yield call(createSocketChannel, socket);
+
+      // Listen to events from the channel
+      while (true) {
+        const action = yield take(socketChannel);
+        yield put(action); // Dispatch the action (e.g., SET_SOCKET_ID or NEW_MESSAGE)
+      }
+    }
+  } catch (error) {
+    console.error("Failed to initialize socket:", error);
+  }
+}
+
+// Socket Cleanup Saga
+function* clearSocketSaga() {
+  if (socket) {
+    yield call([socket, "disconnect"]); // Disconnect socket
+    console.log("Socket disconnected!");
+    socket = null; // Clear socket instance
+  }
+}
+
 function* authSaga() {
   yield takeEvery("USER_LOGIN", loginUser);
   yield takeEvery("USER_LOGOUT", logoutUser);
@@ -138,6 +202,8 @@ function* authSaga() {
   yield takeEvery("USER_PASSWORD_FORGOT", forgotPassword);
   yield takeEvery("RESET_PASSWORD", resetPassword);
   yield takeLatest("FETCH_USER_PERMISSIONS", fetchUserPermissionsSaga);
+  yield takeEvery("INIT_SOCKET", initSocketSaga);
+  yield takeEvery("CLEAR_SOCKET", clearSocketSaga);
 }
 
 export default authSaga;

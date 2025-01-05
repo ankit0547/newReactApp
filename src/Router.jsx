@@ -93,7 +93,7 @@ const AppRouter = () => {
   const publicRoutes = routes.filter((r) => r.public);
   const privateRoutes = routes.filter((r) => !r.public);
 
-  console.log("rt", privateRoutes);
+  // console.log("rt", privateRoutes);
 
   return (
     <>

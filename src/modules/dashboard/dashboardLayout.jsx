@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getAction } from "../../redux/util/util";
 import { useEffect } from "react";
 import Sidebar from "./sidebar";
@@ -8,24 +8,28 @@ import Sidebar from "./sidebar";
 // import { fetchUserPermissions } from "../../redux/actions";
 import DashHeader from "./dashHeader";
 import ChatArea from "./chatArea";
-import SocketIO from "../../api/socketIo/SocketIO";
+import {
+  clearSocketAction,
+  getAllChats,
+  initSocketAction,
+} from "./redux/actions";
+// import SocketIO from "../../api/socketIo/SocketIO";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
 
-  const { allUser } = useSelector((state) => state.DashboardStates);
+  // const { allUser } = useSelector((state) => state.DashboardStates);
 
-  const tt = new SocketIO();
-  tt.on("connect", (data) => {
-    console.log("data", data);
-  });
-
-  // Join the server
-  // socket.emit("join", { userId: allUser?._id });
-  console.log("userDetails", allUser);
+  // console.log("userDetails", allUser);
   useEffect(() => {
     dispatch(getAction("GET_ALL_USERS"));
-  }, []);
+    dispatch(initSocketAction());
+    dispatch(getAllChats());
+    // Cleanup on unmount
+    return () => {
+      dispatch(clearSocketAction());
+    };
+  }, [dispatch]);
 
   // Sample groups and DM data
 

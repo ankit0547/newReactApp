@@ -32,3 +32,8 @@
     border-radius: 10px !important;
     background-color: #CDCCCC !important; 
   }
+
+
+  .selected-chat{
+    border: 1px solid red;
+  }

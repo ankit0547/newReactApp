@@ -1,10 +1,8 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getAction } from "../../redux/util/util";
 
 const DashHeader = () => {
-  const { userDetails } = useSelector((state) => state.AuthStates);
   const dispatch = useDispatch();
-  console.log(userDetails);
 
   const handleLogout = () => {
     dispatch(getAction("USER_LOGOUT"));

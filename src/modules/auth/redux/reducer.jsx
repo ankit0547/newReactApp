@@ -10,9 +10,12 @@ const initialState = {
   authServerError: null,
   userDetails: null,
   rbac: null,
+  socketId: null,
 };
 
 const AuthReducer = (state = initialState, action) => {
+  // eslint-disable-next-line no-debugger
+  // debugger;
   switch (action.type) {
     case "SET_USER_AUTH":
       return { ...state, isUserAuthenticated: action.payload };
@@ -29,6 +32,8 @@ const AuthReducer = (state = initialState, action) => {
         ...state,
         role: action.payload,
       };
+    case "SET_SOCKET_ID":
+      return { ...state, socketId: action.payload };
     default:
       return state;
   }

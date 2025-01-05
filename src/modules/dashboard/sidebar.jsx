@@ -26,6 +26,8 @@ const Sidebar = () => {
   const [isNewDmModalOpen, setIsNewDmModalOpen] = useState(false);
   const [isGroupsCollapsed, setIsGroupsCollapsed] = useState(false);
   const [isDmsCollapsed, setIsDmsCollapsed] = useState(false);
+
+  const { allChats } = useSelector((state) => state.ChatStates);
   const groups = [
     { id: 1, name: "Developers Group", members: ["John", "Alice", "Bob"] },
     { id: 2, name: "Designers Group", members: ["Paul", "Lily"] },
@@ -33,17 +35,8 @@ const Sidebar = () => {
 
   // const { allUsers } = useSelector((state) => state.DashboardStates);
 
-  // console.log("allUser", allUsers);
+  console.log("allChats", allChats);
 
-  const dms = [];
-
-  // Handle chat selection
-  // const handleSelectChat = (user) => {
-  //   // setActiveChat(chat.id);
-  //   setSelectChat(user);
-  //   // setChatType(chat.type); // 'group' or 'dm'
-  //   // setMessages([]); // Replace with actual messages based on selected chat
-  // };
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
@@ -205,7 +198,7 @@ const Sidebar = () => {
             )}
           </div>
 
-          {/* DMs */}
+          {/* allChats */}
           <div>
             <div
               className={`flex justify-between items-center mb-4 ${
@@ -213,7 +206,7 @@ const Sidebar = () => {
               }`}
             >
               <div className="flex items-center">
-                {dms.length > 0 && (
+                {allChats.length > 0 && (
                   <button onClick={toggleDms} className="text-gray-600">
                     {isDmsCollapsed ? (
                       <svg
@@ -270,7 +263,7 @@ const Sidebar = () => {
             </div>
             {!isDmsCollapsed && (
               <ul className="space-y-2">
-                {dms?.map((dm) => (
+                {allChats?.map((dm) => (
                   <li key={dm.id}>
                     <a
                       href="#"
@@ -357,14 +350,21 @@ const NewGroupModal = ({ onClose }) => {
 };
 
 const NewDmModal = ({ onClose }) => {
-  const [selectChat, setSelectChat] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [selectChat, setSelectChat] = useState([]);
   const { allUsers } = useSelector((state) => state.DashboardStates);
 
   console.log("selectChat", selectChat, allUsers);
 
   const handleSelectChat = (user) => {
-    setSelectChat(user);
+    if (selectChat.length > 1) return;
+    setSelectChat([user]);
   };
+
+  // const handleStartChat = () => {
+  //   // close();
+  // };
+  console.log("selectChat", selectChat);
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg w-96">
@@ -377,9 +377,13 @@ const NewDmModal = ({ onClose }) => {
           {/* Add user selection for DM */}
           <ul className="space-y-2">
             {allUsers.map((dm) => (
-              <li key={dm._id}>
+              <li
+                key={dm._id}
+                className={
+                  dm._id === selectChat[0]?.userId ? "selected-chat" : ""
+                }
+              >
                 <button
-                  // href={dm?.avatar.url}
                   onClick={() =>
                     handleSelectChat({
                       userId: dm._id,

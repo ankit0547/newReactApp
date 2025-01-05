@@ -11,13 +11,14 @@ import { invokeApi } from "../../../../api/invokeApi";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 
-function* createNewChat(action) {
+function* getAllChats(action) {
   yield put(ProcessingStart());
   try {
     // Handle form submission logic here
-    const data = yield invokeApi("USER_DETAILS", action.payload);
+    const data = yield invokeApi("GET_ALL_CHATS");
+    console.log("ALL>>", data.data);
     if (data && data.status === 200) {
-      yield put(getAction("SET_USER_DETAILS", data.data));
+      yield put(getAction("SET_ALL_CHATS", data.data));
       yield put(ProcessingEnd());
     }
   } catch (e) {
@@ -27,7 +28,7 @@ function* createNewChat(action) {
 }
 
 function* chatSaga() {
-  yield takeEvery("CREATE_NEW_CHAT", createNewChat);
+  yield takeEvery("GET_CHATS", getAllChats);
 }
 
 export default chatSaga;

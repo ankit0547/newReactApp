@@ -40,4 +40,9 @@ export const apiConstants = [
     endpoint: `/user/all`,
     method: "GET",
   },
+  {
+    actionType: "GET_ALL_CHATS",
+    endpoint: `/chat/`,
+    method: "GET",
+  },
 ];
