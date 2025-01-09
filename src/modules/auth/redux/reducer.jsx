@@ -11,12 +11,22 @@ const initialState = {
   userDetails: null,
   rbac: null,
   socketId: null,
+  accessToken: null,
+  userStatuses: {},
 };
 
 const AuthReducer = (state = initialState, action) => {
   // eslint-disable-next-line no-debugger
+  console.log(action.payload);
   // debugger;
   switch (action.type) {
+    case "SET_USER_STATUS":
+      return {
+        ...state,
+        userStatuses: { ...state.userStatuses, ...action.payload },
+      };
+    case "SET_ACCESS_TOCKEN":
+      return { ...state, accessToken: action.payload };
     case "SET_USER_AUTH":
       return { ...state, isUserAuthenticated: action.payload };
     case "SET_RESET_PASSWORD_MAIL_SENT":

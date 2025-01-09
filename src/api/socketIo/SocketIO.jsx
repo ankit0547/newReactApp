@@ -2,15 +2,32 @@ import { io } from "socket.io-client";
 
 class SocketIO {
   constructor(authToken) {
-    this.socket = io("http://localhost:7800", {
-      transports: ["websocket"], // Optional: Ensure WebSocket transport is used
+    this.authToken = authToken;
+    this.socket = this.createSocket();
+  }
+  debugger;
+  createSocket() {
+    return io("http://localhost:7800", {
+      port: 7800,
+      transports: ["websocket"],
       auth: {
-        token: authToken, // Pass the token for authentication
+        token: this.authToken, // Pass the token for authentication
       },
+      reconnection: true, // Enable auto-reconnect
+      reconnectionAttempts: 10, // Limit the number of reconnection attempts
+      reconnectionDelay: 1000, // Delay between reconnection attempts
     });
   }
 
-  // emit({ type: "SET_SOCKET_ID", payload: socket.socket.id });
+  reconnect(authToken) {
+    this.authToken = authToken;
+    if (this.socket) {
+      this.socket.auth.token = authToken;
+      this.socket.connect();
+    } else {
+      this.socket = this.createSocket();
+    }
+  }
 
   on(eventName, callback) {
     this.socket.on(eventName, callback);

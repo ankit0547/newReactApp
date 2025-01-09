@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { put, takeEvery } from "redux-saga/effects";
+import { call, fork, put, take, takeEvery } from "redux-saga/effects";
 
 import {
   getAction,
@@ -8,50 +8,37 @@ import {
 } from "../../../../redux/util/util";
 
 import { invokeApi } from "../../../../api/invokeApi";
+import { createSocketChannel } from "../../../../api/socketIo/channel";
+import SocketIO from "../../../../api/socketIo/SocketIO";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
+let socketInstance;
+function* watchSocketEvents(authToken) {
+  // eslint-disable-next-line no-debugger
+  debugger;
+  socketInstance = yield new SocketIO(authToken);
+  yield new Promise((resolve) => socketInstance.on("connect", resolve));
+  // Notify the server when the user logs in
+  socketInstance.emit("userLoggedIn", authToken.userId);
+  const socketChannel = yield call(createSocketChannel, socketInstance.socket);
 
-function* getAllChats(action) {
-  yield put(ProcessingStart());
+  console.log(socketChannel);
+
   try {
-    // Handle form submission logic here
-    const data = yield invokeApi("GET_ALL_CHATS");
-    console.log("ALL>>", data.data);
-    if (data && data.status === 200) {
-      yield put(getAction("SET_ALL_CHATS", data.data));
-      yield put(ProcessingEnd());
+    // join user online
+
+    while (true) {
+      const action = yield take(socketChannel);
+      yield put(action);
     }
-  } catch (e) {
-    yield put({ type: "USER_FETCH_FAILED", message: e.message });
-    yield put(ProcessingEnd());
-  }
-}
-function* createNewChat(action) {
-  yield put(ProcessingStart());
-  try {
-    // eslint-disable-next-line no-debugger
-    // debugger;
-    // Handle form submission logic here
-    const data = yield invokeApi("CREATE_NEW_CHAT", null, {
-      receiverId: action.payload,
-    });
-    // eslint-disable-next-line no-debugger
-    // debugger;
-    console.log("ALL>>", data.data);
-    yield put(ProcessingEnd());
-    // if (data && data.status === 200) {
-    //   yield put(getAction("SET_ALL_CHATS", data.data));
-    //   yield put(ProcessingEnd());
-    // }
-  } catch (e) {
-    // yield put({ type: "USER_FETCH_FAILED", message: e.message });
-    yield put(ProcessingEnd());
+  } catch (error) {
+    console.error("Socket error:", error);
   }
 }
 
 function* chatSaga() {
-  yield takeEvery("GET_CHATS", getAllChats);
-  yield takeEvery("START_NEW_CHAT", createNewChat);
+  const localAccessToken = localStorage.getItem("accessToken");
+  yield takeEvery("AUTH_SUCCESS", watchSocketEvents, localAccessToken);
 }
 
 export default chatSaga;

@@ -1,25 +1,7 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAction } from "../../redux/util/util";
-
-// const sideMenuItems = [
-//   {
-//     to: "/home",
-//     icon: "🏠",
-//     label: "Home",
-//   },
-//   {
-//     to: "/profile",
-//     icon: "📊",
-//     label: "Profile",
-//   },
-//   {
-//     to: "/settings",
-//     icon: "⚙️",
-//     label: "Settings",
-//   },
-// ];
+// import { getAction } from "../../redux/util/util";
 
 const Sidebar = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -28,15 +10,20 @@ const Sidebar = () => {
   const [isGroupsCollapsed, setIsGroupsCollapsed] = useState(false);
   const [isDmsCollapsed, setIsDmsCollapsed] = useState(false);
 
-  const { allChats } = useSelector((state) => state.ChatStates);
   const groups = [
     { id: 1, name: "Developers Group", members: ["John", "Alice", "Bob"] },
     { id: 2, name: "Designers Group", members: ["Paul", "Lily"] },
   ];
 
-  // const { allUsers } = useSelector((state) => state.DashboardStates);
+  const { allUsers } = useSelector((state) => state.DashboardStates);
+  const { userStatuses } = useSelector((state) => state.AuthStates);
 
-  console.log("allChats", allChats);
+  // const { allUsers } = useSelector((state) => state.DashboardStates);
+  const allDMChats = allUsers;
+
+  useEffect(() => {}, [userStatuses]);
+
+  console.log("userStatuses", userStatuses);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -207,7 +194,7 @@ const Sidebar = () => {
               }`}
             >
               <div className="flex items-center">
-                {allChats.length > 0 && (
+                {allDMChats?.length > 0 && (
                   <button onClick={toggleDms} className="text-gray-600">
                     {isDmsCollapsed ? (
                       <svg
@@ -264,8 +251,8 @@ const Sidebar = () => {
             </div>
             {!isDmsCollapsed && (
               <ul className="space-y-2">
-                {allChats?.map((dm) => (
-                  <li key={dm.id}>
+                {allDMChats?.map((dm) => (
+                  <li key={dm._id}>
                     <a
                       href="#"
                       // onClick={() =>
@@ -274,14 +261,18 @@ const Sidebar = () => {
                       className="block p-2 rounded hover:bg-gray-200"
                     >
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-gray-300 rounded-full">
-                          <div className="w-10 h-10 bg-gray-300 rounded-full">
-                            <img
-                              // src={dm?.avatar.url}
-                              // alt={dm?.avatar.url}
-                              className="w-10 h-10 rounded-full"
-                            />
-                          </div>
+                        <div className="relative w-10 h-10 bg-gray-300 rounded-full">
+                          <img
+                            src={dm?.avatar.url}
+                            alt={`${dm?.firstName} ${dm?.lastName}`}
+                            className="w-10 h-10 rounded-full"
+                          />
+                          <span
+                            className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ${
+                              dm.isOnline ? "bg-green-500" : "bg-gray-400"
+                            } border-2 border-white`}
+                            title={dm.isOnline ? "Online" : "Offline"}
+                          />
                         </div>
                         <span
                           className={`font-medium ${
@@ -363,7 +354,9 @@ const NewDmModal = ({ onClose }) => {
     setSelectChat([user]);
     // eslint-disable-next-line no-debugger
     // debugger;
-    dispatch(getAction("START_NEW_CHAT", user.userId));
+    dispatch({ type: "REGISTER_ONLINE" });
+
+    // dispatch(getAction("START_NEW_CHAT", user.userId));
   };
 
   // const handleStartChat = () => {

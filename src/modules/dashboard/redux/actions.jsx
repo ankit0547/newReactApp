@@ -7,11 +7,21 @@ export const authActionTypes = {
 };
 
 // Action Creators
-export const initSocketAction = () => ({ type: authActionTypes.INIT_SOCKET });
 export const getAllChats = () => ({ type: authActionTypes.GET_CHATS });
-export const clearSocketAction = () => ({ type: authActionTypes.CLEAR_SOCKET });
 
-export const setSocketId = (socketId) => ({
-  type: authActionTypes.SET_SOCKET_ID,
-  payload: socketId,
+export const SOCKET_CONNECT = "SOCKET_CONNECT";
+export const SOCKET_DISCONNECT = "SOCKET_DISCONNECT";
+
+export const connectSocket = (authToken) => ({
+  type: SOCKET_CONNECT,
+  payload: authToken,
+});
+
+export const disconnectSocket = () => ({
+  type: SOCKET_DISCONNECT,
+});
+
+export const setUserStatus = (payload) => ({
+  type: "SET_USER_STATUS",
+  payload,
 });

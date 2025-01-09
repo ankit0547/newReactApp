@@ -9,27 +9,35 @@ import Sidebar from "./sidebar";
 import DashHeader from "./dashHeader";
 import ChatArea from "./chatArea";
 import {
-  clearSocketAction,
+  connectSocket,
+  disconnectSocket,
+  // clearSocketAction,
   getAllChats,
-  initSocketAction,
+  // initSocketAction,
 } from "./redux/actions";
-// import SocketIO from "../../api/socketIo/SocketIO";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
+
+  // const authToken = useSelector((state) => state.AuthStates.token);
+  const authToken = localStorage.getItem("accessToken");
 
   // const { allUser } = useSelector((state) => state.DashboardStates);
 
   // console.log("userDetails", allUser);
   useEffect(() => {
+    if (authToken) {
+      dispatch(connectSocket(authToken));
+    }
+
     dispatch(getAction("GET_ALL_USERS"));
-    dispatch(initSocketAction());
+    // dispatch(initSocketAction());
     dispatch(getAllChats());
     // Cleanup on unmount
     return () => {
-      dispatch(clearSocketAction());
+      dispatch(disconnectSocket()); // Disconnect when the app is unmounted
     };
-  }, [dispatch]);
+  }, [authToken, dispatch]);
 
   // Sample groups and DM data
 

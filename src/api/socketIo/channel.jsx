@@ -1,25 +1,30 @@
 import { eventChannel } from "redux-saga";
+// import { setOnlineUsers } from "../../modules/chat/redux/actions";
 
 export function createSocketChannel(socket) {
   return eventChannel((emit) => {
-    socket.on("connect", () => {
-      console.log("Socket connected:", socket.socket.id);
-      emit({ type: "SET_SOCKET_ID", payload: socket.socket.id });
-    });
+    const handleStatusChange = (data) => {
+      emit({ type: "userStatusChange", data });
+    };
 
-    socket.on("message", (msg) => {
-      console.log("New message:", msg);
-      emit({ type: "NEW_MESSAGE", payload: msg });
-    });
+    const handleReconnect = () => {
+      console.log("Socket reconnected");
+      emit({ type: "reconnect" });
+    };
 
-    socket.on("disconnect", () => {
+    const handleDisconnect = () => {
       console.log("Socket disconnected");
-      emit({ type: "SOCKET_DISCONNECTED" });
-    });
+      emit({ type: "disconnect" });
+    };
 
-    // Return a function to unsubscribe from the events
+    socket.on("userStatusChange", handleStatusChange);
+    socket.on("connect", handleReconnect);
+    socket.on("disconnect", handleDisconnect);
+
     return () => {
-      socket.disconnect();
+      socket.off("userStatusChange", handleStatusChange);
+      socket.off("connect", handleReconnect);
+      socket.off("disconnect", handleDisconnect);
     };
   });
 }
