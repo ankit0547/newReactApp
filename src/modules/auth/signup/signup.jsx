@@ -29,7 +29,7 @@ const SignupForm = () => {
     e.preventDefault();
     // Handle form submission logic here
     dispatch(getAction("USER_REGISTER_REQUEST", formData));
-    console.log("Form submitted:", formData);
+    // console.log("Form submitted:", formData);
   };
 
   useEffect(() => {

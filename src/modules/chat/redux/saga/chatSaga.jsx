@@ -22,7 +22,7 @@ function* watchSocketEvents(authToken) {
   socketInstance.emit("userLoggedIn", authToken.userId);
   const socketChannel = yield call(createSocketChannel, socketInstance.socket);
 
-  console.log(socketChannel);
+  // console.log(socketChannel);
 
   try {
     // join user online

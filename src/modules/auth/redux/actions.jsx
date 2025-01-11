@@ -18,3 +18,8 @@ export const fetchUserPermissionsFailure = (error) => ({
   type: authActionTypes.FETCH_USER_PERMISSIONS_FAILURE,
   payload: error,
 });
+
+export const updateUserStatus = (statusUpdates) => ({
+  type: "UPDATE_USER_STATUS",
+  payload: statusUpdates,
+});

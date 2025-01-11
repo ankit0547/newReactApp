@@ -32,9 +32,6 @@ import { createSocketChannel } from "../../../../api/socketIo/channel";
 
 let socketInstance;
 function* handleSocketConnection({ payload }) {
-  // eslint-disable-next-line no-debugger
-  // debugger;
-  // Initialize the socket if not already created
   if (!socketInstance) {
     socketInstance = yield new SocketIO(payload);
   } else {
@@ -47,7 +44,7 @@ function* handleSocketConnection({ payload }) {
     while (true) {
       const event = yield take(socketChannel);
       if (event.type === "userStatusChange") {
-        console.log("S>>", event.data);
+        console.log("event.data", event.data);
         yield put(setUserStatus(event.data)); // Dispatch Redux action
       }
     }
@@ -98,12 +95,11 @@ function* loginUser(action) {
         yield put(getAction("SET_ACCESS_TOCKEN", localAccessToken));
         yield put(getAction("SET_USER_AUTH", true));
         yield put(connectSocket(localAccessToken)); // Connect to the socket on successful login
-        // yield put(getAction("AUTH_SUCCESS"));
         yield put(ProcessingEnd());
       }
     }
   } catch (e) {
-    console.log(">>>>", e);
+    // console.log(">>>>", e);
     // yield put({ type: "SET_AUTH_SRVER_ERROR", message: e.message });
     yield put(getAction("SET_AUTH_SRVER_ERROR", e.message));
     yield put(ProcessingEnd());

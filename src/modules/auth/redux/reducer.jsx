@@ -12,19 +12,15 @@ const initialState = {
   rbac: null,
   socketId: null,
   accessToken: null,
-  userStatuses: {},
+  onlineUsers: [],
 };
 
 const AuthReducer = (state = initialState, action) => {
-  // eslint-disable-next-line no-debugger
-  console.log(action.payload);
-  // debugger;
   switch (action.type) {
-    case "SET_USER_STATUS":
-      return {
-        ...state,
-        userStatuses: { ...state.userStatuses, ...action.payload },
-      };
+    case "SET_USER_STATUS": {
+      console.log(action.payload);
+      return { ...state, onlineUsers: action.payload };
+    }
     case "SET_ACCESS_TOCKEN":
       return { ...state, accessToken: action.payload };
     case "SET_USER_AUTH":

@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import { useState } from "react";
+// eslint-disable-next-line no-unused-vars
 import { useDispatch, useSelector } from "react-redux";
 // import { getAction } from "../../redux/util/util";
 
@@ -16,14 +17,11 @@ const Sidebar = () => {
   ];
 
   const { allUsers } = useSelector((state) => state.DashboardStates);
-  const { userStatuses } = useSelector((state) => state.AuthStates);
+  const { onlineUsers } = useSelector((state) => state.AuthStates);
 
   // const { allUsers } = useSelector((state) => state.DashboardStates);
   const allDMChats = allUsers;
-
-  useEffect(() => {}, [userStatuses]);
-
-  console.log("userStatuses", userStatuses);
+  console.log("allUsers", allUsers);
 
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
@@ -253,13 +251,7 @@ const Sidebar = () => {
               <ul className="space-y-2">
                 {allDMChats?.map((dm) => (
                   <li key={dm._id}>
-                    <a
-                      href="#"
-                      // onClick={() =>
-                      //   selectChat({ id: dm.id, name: dm.name, type: "dm" })
-                      // }
-                      className="block p-2 rounded hover:bg-gray-200"
-                    >
+                    <a className="block p-2 rounded hover:bg-gray-200">
                       <div className="flex items-center space-x-3">
                         <div className="relative w-10 h-10 bg-gray-300 rounded-full">
                           <img
@@ -268,8 +260,12 @@ const Sidebar = () => {
                             className="w-10 h-10 rounded-full"
                           />
                           <span
-                            className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ${
-                              dm.isOnline ? "bg-green-500" : "bg-gray-400"
+                            className={`absolute bottom-0 right-0 w-4 h-4 rounded-full ${
+                              onlineUsers?.some(
+                                (user) => user.userId === dm._id
+                              )
+                                ? "bg-green-500"
+                                : "bg-gray-400"
                             } border-2 border-white`}
                             title={dm.isOnline ? "Online" : "Offline"}
                           />
@@ -342,27 +338,17 @@ const NewGroupModal = ({ onClose }) => {
 };
 
 const NewDmModal = ({ onClose }) => {
-  // eslint-disable-next-line no-unused-vars
   const [selectChat, setSelectChat] = useState([]);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
   const { allUsers } = useSelector((state) => state.DashboardStates);
-
-  console.log("selectChat", selectChat, allUsers);
+  const { onlineUsers } = useSelector((state) => state.AuthStates);
+  //
 
   const handleSelectChat = (user) => {
     if (selectChat.length > 1) return;
     setSelectChat([user]);
-    // eslint-disable-next-line no-debugger
-    // debugger;
-    dispatch({ type: "REGISTER_ONLINE" });
-
-    // dispatch(getAction("START_NEW_CHAT", user.userId));
   };
 
-  // const handleStartChat = () => {
-  //   // close();
-  // };
-  console.log("selectChat", selectChat);
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center">
       <div className="bg-white p-6 rounded-lg w-96">
@@ -398,9 +384,14 @@ const NewDmModal = ({ onClose }) => {
                         alt={`${dm?.firstName} ${dm?.lastName}`}
                         className="w-10 h-10 rounded-full"
                       />
+
                       <span
                         className={`absolute bottom-0 right-0 w-3 h-3 rounded-full ${
-                          dm.isOnline ? "bg-green-500" : "bg-gray-400"
+                          onlineUsers?.some(
+                            (onlineUser) => onlineUser.userId === dm._id
+                          )
+                            ? "bg-green-500"
+                            : "bg-gray-400"
                         } border-2 border-white`}
                         title={dm.isOnline ? "Online" : "Offline"}
                       />
@@ -411,29 +402,6 @@ const NewDmModal = ({ onClose }) => {
                   </div>
                 </button>
               </li>
-
-              // <li key={dm.id}>
-              //   <a
-              //     // href={dm?.avatar.url}
-              //     // onClick={() =>
-              //     //   selectChat({ id: dm.id, name: dm.name, type: "dm" })
-              //     // }
-              //     className="block p-2 rounded hover:bg-gray-200"
-              //   >
-              //     <div className="flex items-center space-x-3">
-              //       <div className="w-10 h-10 bg-gray-300 rounded-full">
-              //         <img
-              //           src={dm?.avatar.url}
-              //           alt={dm?.avatar.url}
-              //           className="w-10 h-10 rounded-full"
-              //         />
-              //       </div>
-              //       <span className={`font-medium`}>
-              //         {dm.firstName} {dm.lastName}
-              //       </span>
-              //     </div>
-              //   </a>
-              // </li>
             ))}
           </ul>
         </div>
