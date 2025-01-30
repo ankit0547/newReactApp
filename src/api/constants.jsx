@@ -41,13 +41,13 @@ export const apiConstants = [
     method: "GET",
   },
   {
-    actionType: "GET_ALL_CHATS",
-    endpoint: `/chat/`,
-    method: "GET",
-  },
-  {
-    actionType: "CREATE_NEW_CHAT",
+    actionType: "CREATE_NEW_CHAT_OR_RETRIVE",
     endpoint: `/chat/c/:receiverId`,
     method: "POST",
+  },
+  {
+    actionType: "GET_ALL_CHATS",
+    endpoint: `/chat`,
+    method: "GET",
   },
 ];

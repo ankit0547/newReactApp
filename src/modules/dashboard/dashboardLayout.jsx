@@ -13,6 +13,8 @@ import {
   disconnectSocket,
   // clearSocketAction,
   getAllChats,
+  getAllDms,
+  getCurrentUser,
   // initSocketAction,
 } from "./redux/actions";
 
@@ -31,6 +33,9 @@ const DashboardLayout = () => {
     }
 
     dispatch(getAction("GET_ALL_USERS"));
+
+    dispatch(getAllDms());
+    dispatch(getCurrentUser());
     // dispatch(initSocketAction());
     dispatch(getAllChats());
     // Cleanup on unmount

@@ -6,30 +6,30 @@ import {
   ProcessingEnd,
   ProcessingStart,
 } from "../../../../redux/util/util";
-
 import { invokeApi } from "../../../../api/invokeApi";
-import { createSocketChannel } from "../../../../api/socketIo/channel";
-import SocketIO from "../../../../api/socketIo/SocketIO";
+import { setAllChats } from "../../../dashboard/redux/actions";
 
-// worker Saga: will be fired on USER_FETCH_REQUESTED actions
-let socketInstance;
-function* watchSocketEvents(authToken) {
-  // eslint-disable-next-line no-debugger
-  debugger;
-  socketInstance = yield new SocketIO(authToken);
-  yield new Promise((resolve) => socketInstance.on("connect", resolve));
-  // Notify the server when the user logs in
-  socketInstance.emit("userLoggedIn", authToken.userId);
-  const socketChannel = yield call(createSocketChannel, socketInstance.socket);
-
-  // console.log(socketChannel);
-
+function* getNewDm(action) {
   try {
-    // join user online
-
-    while (true) {
-      const action = yield take(socketChannel);
-      yield put(action);
+    ProcessingStart();
+    const data = yield invokeApi("CREATE_NEW_CHAT_OR_RETRIVE", null, {
+      receiverId: action.payload,
+    });
+    if (data) {
+      console.log("C>>", data);
+      yield put(ProcessingEnd());
+    }
+  } catch (error) {
+    console.error("Socket error:", error);
+  }
+}
+function* getAllDm(action) {
+  try {
+    ProcessingStart();
+    const data = yield invokeApi("GET_ALL_CHATS");
+    if (data) {
+      yield put(setAllChats(data.data));
+      yield put(ProcessingEnd());
     }
   } catch (error) {
     console.error("Socket error:", error);
@@ -37,8 +37,8 @@ function* watchSocketEvents(authToken) {
 }
 
 function* chatSaga() {
-  const localAccessToken = localStorage.getItem("accessToken");
-  yield takeEvery("AUTH_SUCCESS", watchSocketEvents, localAccessToken);
+  yield takeEvery("NEW_DM", getNewDm);
+  yield takeEvery("GET_ALL_DM", getAllDm);
 }
 
 export default chatSaga;

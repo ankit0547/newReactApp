@@ -25,3 +25,13 @@ export const setUserStatus = (payload) => ({
   type: "SET_USER_STATUS",
   payload,
 });
+export const getAllDms = () => ({
+  type: "GET_ALL_DM",
+});
+export const setAllChats = (payload) => ({
+  type: "SET_ALL_CHATS",
+  payload,
+});
+export const getCurrentUser = () => ({
+  type: "GET_USER_DETAILS",
+});

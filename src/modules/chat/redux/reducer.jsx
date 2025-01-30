@@ -7,8 +7,10 @@ const initialState = {
 
 const ChatReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "SET_ALL_CHATS":
+    case "SET_ALL_CHATS": {
       return { ...state, allChats: action.payload };
+    }
+
     case "SET_ONLINE_USERS":
       return { ...state, onlineUsers: action.payload };
     case "SET_CHAT_ROOM":

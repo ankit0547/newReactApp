@@ -17,6 +17,15 @@ export function createSocketChannel(socket) {
       emit({ type: "disconnect" });
     };
 
+    // Listen for incoming messages from the server
+    socket.on("receiveMessage", (message) => {
+      emit({ type: "RECEIVE_MESSAGE", payload: message });
+    });
+
+    socket.on("messageSent", (message) => {
+      emit({ type: "SEND_MESSAGE", payload: message });
+    });
+
     socket.on("userStatusChange", handleStatusChange);
     socket.on("connect", handleReconnect);
     socket.on("disconnect", handleDisconnect);
