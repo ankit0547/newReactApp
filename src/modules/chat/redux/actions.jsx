@@ -7,9 +7,9 @@ export const setOnlineUsers = (users) => ({
   payload: users,
 });
 
-export const setChatRoom = (roomId) => ({
-  type: "SET_CHAT_ROOM",
-  payload: roomId,
+export const selectCurrentChat = (chatId) => ({
+  type: "SET_SELECTED_CHAT",
+  payload: chatId,
 });
 
 export const addMessage = (message) => ({

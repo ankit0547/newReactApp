@@ -1,6 +1,7 @@
 const initialState = {
   allChats: [],
   onlineUsers: [],
+  selectedChat: null,
   activeRoom: null,
   messages: [],
 };
@@ -10,7 +11,9 @@ const ChatReducer = (state = initialState, action) => {
     case "SET_ALL_CHATS": {
       return { ...state, allChats: action.payload };
     }
-
+    case "SET_SELECTED_CHAT": {
+      return { ...state, selectedChat: action.payload };
+    }
     case "SET_ONLINE_USERS":
       return { ...state, onlineUsers: action.payload };
     case "SET_CHAT_ROOM":

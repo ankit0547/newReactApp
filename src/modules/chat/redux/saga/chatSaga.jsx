@@ -8,6 +8,7 @@ import {
 } from "../../../../redux/util/util";
 import { invokeApi } from "../../../../api/invokeApi";
 import { setAllChats } from "../../../dashboard/redux/actions";
+import { selectCurrentChat } from "../actions";
 
 function* getNewDm(action) {
   try {
@@ -16,7 +17,7 @@ function* getNewDm(action) {
       receiverId: action.payload,
     });
     if (data) {
-      console.log("C>>", data);
+      yield put(selectCurrentChat(data.data.chatId));
       yield put(ProcessingEnd());
     }
   } catch (error) {

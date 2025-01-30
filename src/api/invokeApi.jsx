@@ -14,20 +14,23 @@ export const invokeApi = async (
   }
 
   if (Object.keys(params).length > 0) {
+    // Store the original endpoint to prevent mutations
+    let endpoint = filteredAction.originalEndpoint || filteredAction.endpoint;
+
     // Replace placeholders in the endpoint (e.g., :resetToken)
-    let endpoint = filteredAction.endpoint;
-    // Dynamically replace placeholders like :resetToken with actual values
     Object.keys(params).forEach((key) => {
       endpoint = endpoint.replace(`:${key}`, params[key]);
     });
-    filteredAction.endpoint = endpoint;
+
+    // Store the modified endpoint separately
+    filteredAction.modifiedEndpoint = endpoint;
   }
 
   try {
     switch (filteredAction.method) {
       case "POST":
         response = await axiosInstance.post(
-          filteredAction.endpoint,
+          filteredAction.modifiedEndpoint || filteredAction.endpoint,
           data,
           config
         );
@@ -35,7 +38,7 @@ export const invokeApi = async (
         break;
       case "GET":
         response = await axiosInstance.get(
-          filteredAction.endpoint,
+          filteredAction.modifiedEndpoint || filteredAction.endpoint,
           data,
           config
         );

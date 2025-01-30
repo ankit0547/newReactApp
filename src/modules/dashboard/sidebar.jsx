@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "../../components/common/Modal/Modal";
 // import { getAction } from "../../redux/util/util";
 import { newDm } from "../chat/redux/actions";
+import PlusIcon from "../../components/Icons/PlusIcon";
+import DownArrowIcon from "../../components/Icons/DownArrowIcon";
+import RightArrowIcon from "../../components/Icons/RightArrowIcon";
 // import { getAction } from "../../redux/util/util";
 
 const GetDmMoal = (toggleNewDmModal, isNewDmModalOpen) => {
@@ -104,29 +107,8 @@ const Sidebar = () => {
   const { allChats } = useSelector((state) => state.ChatStates);
   const { onlineUsers } = useSelector((state) => state.AuthStates);
   const { userDetails } = useSelector((state) => state.DashboardStates);
+  const dispatch = useDispatch();
 
-  const filterOutCurrentUser = (chats, currentUserId) => {
-    return chats.map((chat) => {
-      // Identify the sender (current user)
-      const sender = chat.participants.find(
-        (participant) => participant._id === currentUserId
-      );
-
-      // Identify the receiver (other participant)
-      const receiver = chat.participants.find(
-        (participant) => participant._id !== currentUserId
-      );
-
-      return {
-        ...chat,
-        sender,
-        receiver,
-      };
-    });
-  };
-
-  const filteredChats = filterOutCurrentUser(allChats, userDetails?._id);
-  console.log("allChats", filteredChats, allChats);
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
@@ -204,35 +186,7 @@ const Sidebar = () => {
             >
               <div className="flex items-center">
                 <button onClick={toggleGroups} className="text-gray-600">
-                  {isGroupsCollapsed ? (
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 5l7 7-7 7"
-                      ></path>
-                    </svg>
-                  ) : (
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19 9l-7 7-7-7"
-                      ></path>
-                    </svg>
-                  )}
+                  {isGroupsCollapsed ? <DownArrowIcon /> : <RightArrowIcon />}
                 </button>
                 <h3
                   className={`font-semibold ${isSidebarCollapsed && "hidden"}`}
@@ -241,19 +195,7 @@ const Sidebar = () => {
                 </h3>
               </div>
               <button onClick={toggleNewGroupModal} className="text-gray-600">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4v16m8-8H4"
-                  ></path>
-                </svg>
+                <PlusIcon />
               </button>
             </div>
             {!isGroupsCollapsed && (
@@ -298,35 +240,7 @@ const Sidebar = () => {
               <div className="flex items-center">
                 {allChats?.length > 0 && (
                   <button onClick={toggleDms} className="text-gray-600">
-                    {isDmsCollapsed ? (
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 5l7 7-7 7"
-                        ></path>
-                      </svg>
-                    ) : (
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M19 9l-7 7-7-7"
-                        ></path>
-                      </svg>
-                    )}
+                    {isDmsCollapsed ? <DownArrowIcon /> : <RightArrowIcon />}
                   </button>
                 )}
                 <h3
@@ -336,19 +250,7 @@ const Sidebar = () => {
                 </h3>
               </div>
               <button onClick={toggleNewDmModal} className="text-gray-600">
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4v16m8-8H4"
-                  ></path>
-                </svg>
+                <PlusIcon />
               </button>
             </div>
             {!isDmsCollapsed && (
@@ -362,13 +264,18 @@ const Sidebar = () => {
                   );
 
                   return (
-                    <li key={_id}>
+                    <li
+                      key={_id}
+                      onClick={() => {
+                        dispatch(newDm(chatDetails?._id));
+                      }}
+                    >
                       <a className="block p-2 rounded hover:bg-gray-200">
                         <div className="flex items-center space-x-3">
                           <div className="relative w-10 h-10 bg-gray-300 rounded-full">
                             <img
-                              src={chatDetails.avatar.url}
-                              alt={`${chatDetails.firstName} ${chatDetails.lastName} `}
+                              src={chatDetails?.avatar.url}
+                              alt={`${chatDetails?.firstName} ${chatDetails?.lastName} `}
                               className="w-10 h-10 rounded-full"
                             />
                             <span
@@ -383,7 +290,7 @@ const Sidebar = () => {
                               isSidebarCollapsed && "hidden"
                             }`}
                           >
-                            {`${chatDetails.firstName} ${chatDetails.lastName} `}
+                            {`${chatDetails?.firstName} ${chatDetails?.lastName} `}
                           </span>
                         </div>
                       </a>
