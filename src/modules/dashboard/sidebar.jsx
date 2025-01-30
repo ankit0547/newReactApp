@@ -105,17 +105,6 @@ const Sidebar = () => {
   const { onlineUsers } = useSelector((state) => state.AuthStates);
   const { userDetails } = useSelector((state) => state.DashboardStates);
 
-  // const { allUsers } = useSelector((state) => state.DashboardStates);
-
-  // const filterOutCurrentUser = (chats, currentUserId) => {
-  //   return chats?.map((chat) => {
-  //     const filteredParticipants = chat.participants.filter(
-  //       (participant) => participant._id !== currentUserId
-  //     );
-  //     return { ...chat, participants: filteredParticipants };
-  //   });
-  // };
-
   const filterOutCurrentUser = (chats, currentUserId) => {
     return chats.map((chat) => {
       // Identify the sender (current user)
@@ -137,7 +126,7 @@ const Sidebar = () => {
   };
 
   const filteredChats = filterOutCurrentUser(allChats, userDetails?._id);
-  console.log("allChats", filteredChats);
+  console.log("allChats", filteredChats, allChats);
   const toggleSidebar = () => {
     setIsSidebarCollapsed(!isSidebarCollapsed);
   };
@@ -171,7 +160,7 @@ const Sidebar = () => {
               isSidebarCollapsed && "hidden"
             }`}
           >
-            Chats
+            {userDetails?.firstName} {userDetails?.lastName}
           </h2>
           <button onClick={toggleSidebar} className="text-gray-600">
             {isSidebarCollapsed ? (
@@ -364,27 +353,29 @@ const Sidebar = () => {
             </div>
             {!isDmsCollapsed && (
               <ul className="space-y-2">
-                {filteredChats?.map(({ receiver }) => {
-                  console.log("@@@@@>>", receiver);
+                {allChats?.map(({ participants, _id }) => {
+                  const chatDetails = participants.find(
+                    (p) => p._id !== userDetails?._id
+                  );
+                  const isOnline = onlineUsers?.some(
+                    (user) => user.userId === chatDetails?._id
+                  );
+
                   return (
-                    <li key={receiver._id}>
+                    <li key={_id}>
                       <a className="block p-2 rounded hover:bg-gray-200">
                         <div className="flex items-center space-x-3">
                           <div className="relative w-10 h-10 bg-gray-300 rounded-full">
                             <img
-                              src={receiver?.avatar.url}
-                              alt={`${receiver?.firstName} ${receiver?.lastName}`}
+                              src={chatDetails.avatar.url}
+                              alt={`${chatDetails.firstName} ${chatDetails.lastName} `}
                               className="w-10 h-10 rounded-full"
                             />
                             <span
                               className={`absolute bottom-0 right-0 w-4 h-4 rounded-full ${
-                                onlineUsers?.some(
-                                  (user) => user.userId === receiver._id
-                                )
-                                  ? "bg-green-500"
-                                  : "bg-gray-400"
+                                isOnline ? "bg-green-500" : "bg-gray-400"
                               } border-2 border-white`}
-                              title={receiver.isOnline ? "Online" : "Offline"}
+                              title={isOnline ? "Online" : "Offline"}
                             />
                           </div>
                           <span
@@ -392,7 +383,7 @@ const Sidebar = () => {
                               isSidebarCollapsed && "hidden"
                             }`}
                           >
-                            {`${receiver.firstName} ${receiver.lastName} `}
+                            {`${chatDetails.firstName} ${chatDetails.lastName} `}
                           </span>
                         </div>
                       </a>
