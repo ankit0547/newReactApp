@@ -5,9 +5,10 @@ class SocketIO {
     this.authToken = authToken;
     this.socket = this.createSocket();
   }
-  debugger;
   createSocket() {
-    return io("http://localhost:7800", {
+    const socketURL =
+      import.meta.env.VITE_APP_SOCKET_URL || window.location.origin;
+    return io(socketURL, {
       path: "/socket.io",
       port: 7800,
       transports: ["websocket"],
