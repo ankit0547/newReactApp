@@ -56,6 +56,10 @@ jobs:
       - name: Deploy on EC2
         run: |
           ssh -t -i ~/.ssh/id_rsa ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+            # Explicitly load nvm (if using nvm)
+            export NVM_DIR="$HOME/.nvm" 
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
             cd /home/${USER}/react-app
             tar -xzf app.tar.gz
             rm app.tar.gz
