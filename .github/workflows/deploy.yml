@@ -10,71 +10,66 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Check out the repository
       - name: Check out code
-        uses:
-          actions/checkout@v2
+        uses: actions/checkout@v2
 
-          # Step 3: Install dependencies
-      - name: Install dependencies
-        run:
-          npm install
-
-          # Step 4: Build the Vite app (default output is in the 'dist' folder)
-      - name: Build Vite App
-        run:
-          npm run build
-
-          # Step 5: Archive the build output (using tar to create a compressed archive)
-      - name: Archive build output
-        run: tar -czf build.tar.gz -C dist .
-
+      # Step 2: Set up SSH key and known_hosts
       - name: Set up SSH key and known_hosts
         run: |
           # Create the SSH directory with proper permissions
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
 
-          # Write the private key to a file and secure it
-          echo "$SSH_PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
+          # Write the private key using printf to preserve formatting
+          printf "%s\n" "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
-          # Remove any existing known_hosts file, create a new one, and set proper permissions
+          # Remove any existing known_hosts file, create a new one, and set permissions
           rm -f ~/.ssh/known_hosts
           touch ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
-          # Fetch and add the host's SSH key to known_hosts securely
+          # Add the remote host to known_hosts to avoid interactive prompts
           ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
 
-      # Step 7: Ensure remote target directory exists and copy the build archive
-      - name: Copy build archive to EC2
+      # Step 3: Archive the application (for example, using git archive)
+      - name: Archive application excluding .git
         run: |
-          # Create the remote directory if it does not exist
-          ssh -i ~/.ssh/private_key.pem ${{ secrets.USER }}@${{ secrets.HOST }} "mkdir -p /home/${{ secrets.USER }}/react-app"
-          # Copy the build archive to the remote directory
-          scp -i ~/.ssh/private_key.pem build.tar.gz ${{ secrets.USER }}@${{ secrets.HOST }}:/home/${{ secrets.USER }}/react-app/
+          git archive --format=tar.gz --output=app.tar.gz HEAD
+
+      # Step 4: Copy the archive to the EC2 instance
+      - name: Copy application archive to EC2
+        run: |
+          # Ensure the remote directory exists
+          ssh -i ~/.ssh/id_rsa ${{ secrets.USER }}@${{ secrets.HOST }} "mkdir -p /home/${{ secrets.USER }}/react-app"
+          # Copy the archive using SCP
+          scp -i ~/.ssh/id_rsa app.tar.gz ${{ secrets.USER }}@${{ secrets.HOST }}:/home/${{ secrets.USER }}/react-app/
         env:
           USER: ${{ secrets.USER }}
           HOST: ${{ secrets.HOST }}
 
-      - name: Copy application archive to EC2
-        run: |
-          scp -i private_key.pem app.tar.gz ${{ secrets.USER }}@${{ secrets.HOST }}:/home/ubuntu/react-app/
-
+      # Step 5: Deploy on EC2: extract the archive and start/restart the app using PM2
       - name: Deploy on EC2
         run: |
-          ssh -t -i ~/.ssh/private_key.pem ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
-          cd /home/${USER}/react-app
-          # Extract the build archive (this places the built files in the current directory)
-          tar -xzf build.tar.gz
-          # Optionally remove the archive after extraction
-          rm build.tar.gz
-          # Restart the PM2 process if it exists, or start a new one
-          # In this example, we use "serve" to serve static files from the extracted folder.
-          # Ensure that "serve" is installed globally or as a dependency in your project.
-          pm2 restart react-app || pm2 start npm --name react-app -- run preview
-          exit
+          ssh -t -i ~/.ssh/id_rsa ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
+            cd /home/${USER}/react-app
+            tar -xzf app.tar.gz
+            rm app.tar.gz
+
+            # Install dependencies (adjust as needed for your React/Vite app)
+            npm install --legacy-peer-deps
+
+            # Build the Vite app (if required)
+            npm run build
+
+            # Restart PM2 process if it exists, otherwise start it.
+            # For example, here we use "npm run preview" to serve the app.
+            pm2 restart reactapp || pm2 start npm --name reactapp -- run preview
+            exit
           EOF
+        env:
+          USER: ${{ secrets.USER }}
