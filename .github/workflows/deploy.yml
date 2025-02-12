@@ -1,45 +1,55 @@
-name: Deploy React Vite App to EC2
+name: Deploy React App to EC2
 
 on:
   push:
     branches:
-      - chat-app-frontend" # Change to your deployment branch, e.g., "chat-app-frontend"
+      - chat-app-frontend
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code from the repository
       - name: Check out code
-        uses: actions/checkout@v2
+        uses:
+          actions/checkout@v2
 
-      # Step 2: Install dependencies
+          # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm install --legacy-peer-deps
+        run:
+          npm install
 
-      # Step 3: Build the Vite app (default output is in the 'dist' folder)
+          # Step 4: Build the Vite app (default output is in the 'dist' folder)
       - name: Build Vite App
-        run: npm run build
+        run:
+          npm run build
 
-      # Step 4: Archive the build output (using tar to create a compressed archive)
+          # Step 5: Archive the build output (using tar to create a compressed archive)
       - name: Archive build output
         run: tar -czf build.tar.gz -C dist .
 
-      # Step 5: Set up SSH key and known_hosts for secure connection
       - name: Set up SSH key and known_hosts
         run: |
+          # Create the SSH directory with proper permissions
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          echo "$SSH_PRIVATE_KEY" > ~/.ssh/private_key.pem
-          chmod 600 ~/.ssh/private_key.pem
-          # Add the remote host to known_hosts to prevent SSH authenticity prompts
+
+          # Write the private key to a file and secure it
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
+          # Remove any existing known_hosts file, create a new one, and set proper permissions
+          rm -f ~/.ssh/known_hosts
+          touch ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+          # Fetch and add the host's SSH key to known_hosts securely
           ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
 
-      # Step 6: Ensure remote target directory exists and copy the build archive
+      # Step 7: Ensure remote target directory exists and copy the build archive
       - name: Copy build archive to EC2
         run: |
           # Create the remote directory if it does not exist
@@ -50,20 +60,21 @@ jobs:
           USER: ${{ secrets.USER }}
           HOST: ${{ secrets.HOST }}
 
-      # Step 7: Deploy on EC2: extract the archive and restart the app using PM2
+      - name: Copy application archive to EC2
+        run: |
+          scp -i private_key.pem app.tar.gz ${{ secrets.USER }}@${{ secrets.HOST }}:/home/ubuntu/react-app/
+
       - name: Deploy on EC2
         run: |
           ssh -t -i ~/.ssh/private_key.pem ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
-            cd /home/${USER}/react-app
-            # Extract the build archive (this places the built files in the current directory)
-            tar -xzf build.tar.gz
-            # Optionally remove the archive after extraction
-            rm build.tar.gz
-            # Restart the PM2 process if it exists, or start a new one
-            # In this example, we use "serve" to serve static files from the extracted folder.
-            # Ensure that "serve" is installed globally or as a dependency in your project.
-            pm2 restart react-app || pm2 start npm --name react-app -- preview
-            exit
+          cd /home/${USER}/react-app
+          # Extract the build archive (this places the built files in the current directory)
+          tar -xzf build.tar.gz
+          # Optionally remove the archive after extraction
+          rm build.tar.gz
+          # Restart the PM2 process if it exists, or start a new one
+          # In this example, we use "serve" to serve static files from the extracted folder.
+          # Ensure that "serve" is installed globally or as a dependency in your project.
+          pm2 restart react-app || pm2 start npm --name react-app -- run preview
+          exit
           EOF
-        env:
-          USER: ${{ secrets.USER }}
