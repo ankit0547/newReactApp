@@ -16,7 +16,7 @@ jobs:
 
       # Step 2: Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       # Step 3: Build the Vite app (default output is in the 'dist' folder)
       - name: Build Vite App
@@ -62,7 +62,7 @@ jobs:
             # Restart the PM2 process if it exists, or start a new one
             # In this example, we use "serve" to serve static files from the extracted folder.
             # Ensure that "serve" is installed globally or as a dependency in your project.
-            pm2 restart react-app || pm2 start npx --name react-app -- serve -s .
+            pm2 restart react-app || pm2 start npm --name react-app -- preview
             exit
           EOF
         env:
