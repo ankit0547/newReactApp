@@ -8,6 +8,7 @@ class SocketIO {
   debugger;
   createSocket() {
     return io("http://localhost:7800", {
+      path: "/socket.io",
       port: 7800,
       transports: ["websocket"],
       auth: {
