@@ -34,14 +34,6 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           HOST: ${{ secrets.HOST }}
 
-      - name: Archive application excluding .git
-        run: |
-          git archive --format=tar.gz --output=app.tar.gz HEAD
-
-      - name: Copy application archive to EC2
-        run: |
-          scp -i private_key.pem app.tar.gz ${{ secrets.USER }}@${{ secrets.HOST }}:/home/ubuntu/react-app/
-
       - name: Deploy on EC2
         run: |
           ssh -t -i private_key.pem ${{ secrets.USER }}@${{ secrets.HOST }} << 'EOF'
