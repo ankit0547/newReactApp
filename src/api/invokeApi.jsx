@@ -1,5 +1,4 @@
 import axiosInstance from "./axios.jsx";
-import { apiConstants } from "./constants";
 
 export const invokeApi = async (
   action,
@@ -8,14 +7,10 @@ export const invokeApi = async (
   config = {}
 ) => {
   let response;
-  let filteredAction = apiConstants.find((obj) => obj.actionType === action);
-  if (!filteredAction) {
-    throw new Error(`Action type "${action}" not found in apiConstants`);
-  }
 
   if (Object.keys(params).length > 0) {
     // Store the original endpoint to prevent mutations
-    let endpoint = filteredAction.originalEndpoint || filteredAction.endpoint;
+    let endpoint = action.originalEndpoint || action.endpoint;
 
     // Replace placeholders in the endpoint (e.g., :resetToken)
     Object.keys(params).forEach((key) => {
@@ -23,14 +18,14 @@ export const invokeApi = async (
     });
 
     // Store the modified endpoint separately
-    filteredAction.modifiedEndpoint = endpoint;
+    action.modifiedEndpoint = endpoint;
   }
 
   try {
-    switch (filteredAction.method) {
+    switch (action.method) {
       case "POST":
         response = await axiosInstance.post(
-          filteredAction.modifiedEndpoint || filteredAction.endpoint,
+          action.modifiedEndpoint || action.endpoint,
           data,
           config
         );
@@ -38,7 +33,7 @@ export const invokeApi = async (
         break;
       case "GET":
         response = await axiosInstance.get(
-          filteredAction.modifiedEndpoint || filteredAction.endpoint,
+          action.modifiedEndpoint || action.endpoint,
           data,
           config
         );

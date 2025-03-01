@@ -1,53 +1,43 @@
 // const apiEndpoint = import.meta.env.VITE_APP_API_URL;
-export const apiConstants = [
-  {
-    actionType: "USER_LOGIN",
+export const apiConstants = {
+  USER_LOGIN: {
     endpoint: `/auth/login`,
     method: "POST",
   },
-  {
-    actionType: "USER_SIGNUP",
+  USER_SIGNUP: {
     endpoint: `/user/register`,
     method: "POST",
   },
-  {
-    actionType: "USER_LOG_OUT",
+  USER_LOG_OUT: {
     endpoint: `/auth/logout`,
     method: "POST",
   },
-  {
-    actionType: "USER_FORGOT_PASSWORD",
+  USER_FORGOT_PASSWORD: {
     endpoint: `/auth/forgot-password`,
     method: "POST",
   },
-  {
-    actionType: "USER_PASSWORD_RESET",
+  USER_PASSWORD_RESET: {
     endpoint: `/auth/reset-password/:resetToken`,
     method: "POST",
   },
-  {
-    actionType: "USER_DETAILS",
+  USER_DETAILS: {
     endpoint: `/user`,
     method: "GET",
   },
-  {
-    actionType: "GET_RBAC",
+  GET_RBAC: {
     endpoint: `/auth/resources`,
     method: "GET",
   },
-  {
-    actionType: "ALL_USERS",
+  ALL_USERS: {
     endpoint: `/user/all`,
     method: "GET",
   },
-  {
-    actionType: "CREATE_NEW_CHAT_OR_RETRIVE",
+  CREATE_NEW_CHAT_OR_RETRIVE: {
     endpoint: `/chat/c/:receiverId`,
     method: "POST",
   },
-  {
-    actionType: "GET_ALL_CHATS",
+  GET_ALL_CHATS: {
     endpoint: `/chat`,
     method: "GET",
   },
-];
+};

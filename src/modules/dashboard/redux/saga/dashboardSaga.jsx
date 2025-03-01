@@ -8,6 +8,7 @@ import {
 } from "../../../../redux/util/util";
 // import { apiConstants } from "../../../api/constants";
 import { invokeApi } from "../../../../api/invokeApi";
+import { apiConstants } from "../../../../api/constants";
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 
@@ -15,7 +16,7 @@ function* getUserDetails(action) {
   yield put(ProcessingStart());
   try {
     // Handle form submission logic here
-    const data = yield invokeApi("USER_DETAILS", action.payload);
+    const data = yield invokeApi(apiConstants.USER_DETAILS, action.payload);
     if (data && data.status === 200) {
       yield put(getAction("SET_USER_DETAILS", data.data));
       yield put(ProcessingEnd());
@@ -29,7 +30,7 @@ function* getAllUsers(action) {
   yield put(ProcessingStart());
   try {
     // Handle form submission logic here
-    const data = yield invokeApi("ALL_USERS", action.payload);
+    const data = yield invokeApi(apiConstants.ALL_USERS, action.payload);
     if (data && data.status === 200) {
       yield put(getAction("SET_ALL_USERS", data.data));
       yield put(ProcessingEnd());

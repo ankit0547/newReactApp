@@ -21,11 +21,9 @@ const GetDmMoal = (toggleNewDmModal, isNewDmModalOpen) => {
   };
 
   const handleNewDm = () => {
-    // alert();
     // Start a new chat with the receiver
     dispatch(newDm(selectChat[0].userId));
     setSelectChat([]);
-    // dispatch(getAction("NEW_DM", { receiverId: selectChat[0]._id }));
     toggleNewDmModal();
   };
 

@@ -29,6 +29,7 @@ import {
 } from "../../../dashboard/redux/actions";
 
 import { createSocketChannel } from "../../../../api/socketIo/channel";
+import { apiConstants } from "../../../../api/constants";
 
 let socketInstance;
 function* handleSocketConnection({ payload }) {
@@ -79,7 +80,7 @@ function* loginUser(action) {
   try {
     yield put(ProcessingStart());
     // Handle form submission logic here
-    const data = yield invokeApi("USER_LOGIN", action.payload);
+    const data = yield invokeApi(apiConstants.USER_LOGIN, action.payload);
 
     if (data) {
       const { accessToken, refreshToken } = data.data;
@@ -109,7 +110,7 @@ function* logoutUser() {
   yield put(ProcessingStart());
   try {
     // Handle form submission logic here
-    const data = yield invokeApi("USER_LOG_OUT");
+    const data = yield invokeApi(apiConstants.USER_LOG_OUT);
     if (data && data.status === 200) {
       localStorage.clear();
 
