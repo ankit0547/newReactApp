@@ -18,19 +18,22 @@ export function createSocketChannel(socket) {
     };
 
     // Listen for incoming messages from the server
-    socket.on("receiveMessage", (message) => {
+    const handleMessageReceived = (message) => {
+      console.log("message", message);
       emit({ type: "RECEIVE_MESSAGE", payload: message });
-    });
+    };
 
     socket.on("messageSent", (message) => {
       emit({ type: "SEND_MESSAGE", payload: message });
     });
 
+    socket.on("messageReceived", handleMessageReceived);
     socket.on("userStatusChange", handleStatusChange);
     socket.on("connect", handleReconnect);
     socket.on("disconnect", handleDisconnect);
 
     return () => {
+      socket.off("messageReceived", handleMessageReceived);
       socket.off("userStatusChange", handleStatusChange);
       socket.off("connect", handleReconnect);
       socket.off("disconnect", handleDisconnect);

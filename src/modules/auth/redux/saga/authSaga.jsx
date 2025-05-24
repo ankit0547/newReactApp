@@ -78,7 +78,7 @@ function* watchSocketConnection() {
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* loginUser(action) {
   try {
-    yield put(ProcessingStart());
+    // yield put(ProcessingStart());
     // Handle form submission logic here
     const data = yield invokeApi(apiConstants.USER_LOGIN, action.payload);
 
@@ -99,6 +99,7 @@ function* loginUser(action) {
         yield put(ProcessingEnd());
       }
     }
+    // yield put(ProcessingEnd());
   } catch (e) {
     // console.log(">>>>", e);
     // yield put({ type: "SET_AUTH_SRVER_ERROR", message: e.message });
@@ -134,14 +135,16 @@ function* logoutUser() {
 function* registerUser(action) {
   yield put(ProcessingStart());
   try {
-    // Handle form submission logic here
-    const data = yield invokeApi("USER_SIGNUP", action.payload);
     // eslint-disable-next-line no-debugger
     debugger;
+    // Handle form submission logic here
+    const data = yield invokeApi(apiConstants.USER_SIGNUP, action.payload);
+
     if (data && data.status === 200) {
       yield put(getAction("SET_USER_DETAILS", data.status));
       yield put(ProcessingEnd());
     }
+    yield put(ProcessingEnd());
   } catch (e) {
     yield put({ type: "USER_FETCH_FAILED", message: e.message });
     yield put(ProcessingEnd());

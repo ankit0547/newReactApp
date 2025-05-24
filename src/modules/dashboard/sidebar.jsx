@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Modal } from "../../components/common/Modal/Modal";
 // import { getAction } from "../../redux/util/util";
-import { newDm } from "../chat/redux/actions";
+import { createNewChat, getAllMessages } from "../chat/redux/actions";
 import PlusIcon from "../../components/Icons/PlusIcon";
 import DownArrowIcon from "../../components/Icons/DownArrowIcon";
 import RightArrowIcon from "../../components/Icons/RightArrowIcon";
@@ -22,7 +22,7 @@ const GetDmMoal = (toggleNewDmModal, isNewDmModalOpen) => {
 
   const handleNewDm = () => {
     // Start a new chat with the receiver
-    dispatch(newDm(selectChat[0].userId));
+    dispatch(createNewChat(selectChat[0].userId));
     setSelectChat([]);
     toggleNewDmModal();
   };
@@ -44,7 +44,7 @@ const GetDmMoal = (toggleNewDmModal, isNewDmModalOpen) => {
       ]}
     >
       <ul className="space-y-2">
-        {allUsers.map((dm) => (
+        {allUsers?.map((dm) => (
           <li
             key={dm._id}
             className={dm._id === selectChat[0]?.userId ? "bg-gray-200" : ""}
@@ -265,7 +265,7 @@ const Sidebar = () => {
                     <li
                       key={_id}
                       onClick={() => {
-                        dispatch(newDm(chatDetails?._id));
+                        dispatch(getAllMessages(chatDetails?._id));
                       }}
                     >
                       <a className="block p-2 rounded hover:bg-gray-200">

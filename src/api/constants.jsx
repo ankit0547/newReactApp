@@ -40,4 +40,8 @@ export const apiConstants = {
     endpoint: `/chat`,
     method: "GET",
   },
+  SEND_MESSAGE: {
+    endpoint: `/messages`,
+    method: "POST",
+  },
 };

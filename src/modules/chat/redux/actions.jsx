@@ -16,7 +16,11 @@ export const addMessage = (message) => ({
   type: "ADD_MESSAGE",
   payload: message,
 });
-export const newDm = (data) => ({
-  type: "NEW_DM",
+export const createNewChat = (data) => ({
+  type: "CREARE_NEW_CHAT",
+  payload: data,
+});
+export const getAllMessages = (data) => ({
+  type: "GET_ALL_MESSAGES",
   payload: data,
 });

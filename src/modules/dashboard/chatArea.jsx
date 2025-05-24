@@ -43,6 +43,7 @@ const ChatArea = () => {
           </div>
         )} */}
 
+        {selectedChat && <div>Start Conversation</div>}
         {!selectedChat && <div>Start a new chat !!</div>}
       </div>
     </>

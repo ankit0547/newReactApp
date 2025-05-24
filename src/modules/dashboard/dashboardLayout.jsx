@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAction } from "../../redux/util/util";
 import { useEffect, useState } from "react";
 import Sidebar from "./sidebar";
@@ -19,7 +19,7 @@ const DashboardLayout = () => {
   // const authToken = useSelector((state) => state.AuthStates.token);
   const authToken = localStorage.getItem("accessToken");
 
-  // const { allUser } = useSelector((state) => state.DashboardStates);
+  const { selectedChat } = useSelector((state) => state.ChatStates);
 
   // console.log("userDetails", allUser);
   useEffect(() => {
@@ -42,11 +42,13 @@ const DashboardLayout = () => {
 
   const [message, setMessage] = useState(null);
 
-  useEffect(() => {
-    console.log("message", message);
-  }, [message]);
+  // useEffect(() => {
+  //   console.log("message", message);
+  // }, [message]);
   const handleMessages = (message) => {
-    dispatch(getAction("SEND_MESSAGE", { message }));
+    dispatch(
+      getAction("SEND_MESSAGE", { content: message, chatId: selectedChat })
+    );
     console.log("send>>>>", message);
   };
 

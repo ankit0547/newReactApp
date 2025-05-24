@@ -18,7 +18,7 @@ const ChatReducer = (state = initialState, action) => {
       return { ...state, onlineUsers: action.payload };
     case "SET_CHAT_ROOM":
       return { ...state, activeRoom: action.payload };
-    case "ADD_MESSAGE":
+    case "RECEIVE_MESSAGE":
       return { ...state, messages: [...state.messages, action.payload] };
     case "RESET_STATE":
       return initialState;

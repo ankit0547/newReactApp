@@ -7,16 +7,22 @@ import {
   ProcessingStart,
 } from "../../../../redux/util/util";
 import { invokeApi } from "../../../../api/invokeApi";
-import { setAllChats } from "../../../dashboard/redux/actions";
+import { setAllMessages } from "../../../dashboard/redux/actions";
 import { selectCurrentChat } from "../actions";
 import { apiConstants } from "../../../../api/constants";
+import { act } from "react";
+import { create } from "storybook/internal/theming";
 
-function* getNewDm(action) {
+function* createNewChat(action) {
   try {
     ProcessingStart();
-    const data = yield invokeApi("CREATE_NEW_CHAT_OR_RETRIVE", null, {
-      receiverId: action.payload,
-    });
+    const data = yield invokeApi(
+      apiConstants.CREATE_NEW_CHAT_OR_RETRIVE,
+      null,
+      {
+        receiverId: action.payload,
+      }
+    );
     if (data) {
       // eslint-disable-next-line no-debugger
       // debugger;
@@ -27,12 +33,12 @@ function* getNewDm(action) {
     console.error("Socket error:", error);
   }
 }
-function* getAllDm(action) {
+function* getAllMessages(action) {
   try {
     ProcessingStart();
     const data = yield invokeApi(apiConstants.GET_ALL_CHATS);
     if (data) {
-      yield put(setAllChats(data.data));
+      yield put(setAllMessages(data.data));
       yield put(ProcessingEnd());
     }
   } catch (error) {
@@ -43,9 +49,12 @@ function* getAllDm(action) {
 function* sendMessage(action) {
   try {
     ProcessingStart();
-    const data = yield invokeApi("SEND_MESSAGE", null, action.payload);
+    const payload = { ...action.payload, chatId: action.payload.chatId };
+    // eslint-disable-next-line no-debugger
+    debugger;
+    const data = yield invokeApi(apiConstants.SEND_MESSAGE, payload);
     if (data) {
-      yield put(setAllChats(data.data));
+      // yield put(setAllChats(data.data));
       yield put(ProcessingEnd());
     }
   } catch (error) {
@@ -53,8 +62,8 @@ function* sendMessage(action) {
   }
 }
 function* chatSaga() {
-  yield takeEvery("NEW_DM", getNewDm);
-  yield takeEvery("GET_ALL_DM", getAllDm);
+  yield takeEvery("CREARE_NEW_CHAT", createNewChat);
+  yield takeEvery("GET_ALL_MESSAGES", getAllMessages);
   yield takeEvery("SEND_MESSAGE", sendMessage);
 }
 

@@ -10,6 +10,7 @@ class SocketIO {
       import.meta.env.VITE_APP_SOCKET_URL || window.location.origin;
     return io(socketURL, {
       path: "/socket.io",
+      pingInterval: 1000,
       port: 7800,
       transports: ["websocket"],
       auth: {
