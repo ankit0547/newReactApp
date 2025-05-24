@@ -59,6 +59,7 @@ const LoginForm = () => {
               name="email"
               id="email"
               isRequired
+              placeHolder="Enter Email"
               value={formData.email}
               handleChange={handleChange}
             />
@@ -68,6 +69,7 @@ const LoginForm = () => {
               label="Password"
               type="password"
               name="password"
+              placeHolder="Enter Password"
               id="password"
               isRequired
               value={formData.password}
